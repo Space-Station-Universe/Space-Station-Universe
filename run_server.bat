@@ -1,0 +1,1 @@
+dotnet run --project Content.Server -c Release --no-build -- --config-file "%CD%\server_config.toml"
