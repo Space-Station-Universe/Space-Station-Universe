@@ -1,0 +1,176 @@
+using Content.Shared.Inventory.Events;
+using Content.Shared.Clothing.Components;
+using Content.Shared.Actions;
+using Content.Shared._Starlight.NullSpace;
+using Content.Shared.Maps;
+using Robust.Server.GameObjects;
+using Content.Shared.Popups;
+using Content.Shared.Physics;
+// using Content.Shared._Starlight.Shadekin; // SSU: re-enable with Shadekin
+using System.Linq;
+using Content.Server.Ghost;
+using Robust.Server.Containers;
+using Robust.Shared.Prototypes;
+using Content.Shared.Light.Components;
+
+namespace Content.Server._Starlight.NullSpace;
+
+public sealed partial class NullSpacePhaseSystem : EntitySystem // SSU: added partial
+{
+    [Dependency] private SharedActionsSystem _actionsSystem = default!; // SSU: dropped readonly
+    [Dependency] private PhysicsSystem _physics = default!; // SSU: dropped readonly
+    [Dependency] private SharedPopupSystem _popup = default!; // SSU: dropped readonly
+    [Dependency] private EntityLookupSystem _lookup = default!; // SSU: dropped readonly
+    [Dependency] private GhostSystem _ghost = default!; // SSU: dropped readonly
+    [Dependency] private ContainerSystem _container = default!; // SSU: dropped readonly
+    [Dependency] private TurfSystem _turf = default!; // SSU: dropped readonly
+
+    private readonly EntProtoId _shadekinShadow = "ShadekinShadow";
+    private static readonly EntProtoId NullPhaseAction = "NullPhaseAction"; // SSU: analyzer forbids literal action IDs
+    private readonly EntProtoId ShadekinPhaseInEffect = "ShadekinPhaseInEffect";
+    private readonly EntProtoId ShadekinPhaseOutEffect = "ShadekinPhaseOutEffect";
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<NullPhaseComponent, MapInitEvent>(OnInit);
+        SubscribeLocalEvent<NullPhaseComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<NullPhaseComponent, GotEquippedEvent>(OnEquipped);
+        SubscribeLocalEvent<NullPhaseComponent, GotUnequippedEvent>(OnUnequipped);
+        SubscribeLocalEvent<NullPhaseComponent, NullPhaseActionEvent>(OnPhaseAction);
+    }
+
+    private void OnInit(EntityUid uid, NullPhaseComponent component, MapInitEvent args)
+    {
+        Toggle(uid, component, true);
+    }
+
+    public void OnShutdown(EntityUid uid, NullPhaseComponent component, ComponentShutdown args)
+    {
+        Toggle(uid, component, false);
+    }
+
+    private void OnEquipped(EntityUid uid, NullPhaseComponent component, GotEquippedEvent args)
+    {
+        if (!TryComp<ClothingComponent>(uid, out var clothing)
+            || !clothing.Slots.HasFlag(args.SlotFlags))
+            return;
+
+        EnsureComp<NullPhaseComponent>(args.EquipTarget); // SSU: upstream renamed Equipee to EquipTarget
+        /* SSU: re-enable with Shadekin
+        if (!component.PreventLightFlicker
+            || !TryComp<ShadekinComponent>(args.EquipTarget, out var shadekin))
+            return;
+        component.OriginalFlickerFlagState = shadekin.DoLightFlicker;
+        shadekin.DoLightFlicker = false;
+        */
+    }
+
+    private void OnUnequipped(EntityUid uid, NullPhaseComponent component, GotUnequippedEvent args)
+    {
+        RemComp<NullPhaseComponent>(args.EquipTarget); // SSU: upstream renamed Equipee to EquipTarget
+        /* SSU: re-enable with Shadekin
+        if (!component.PreventLightFlicker
+            || !TryComp<ShadekinComponent>(args.EquipTarget, out var shadekin))
+            return;
+        shadekin.DoLightFlicker = component.OriginalFlickerFlagState;
+        */
+    }
+
+    private void OnPhaseAction(EntityUid uid, NullPhaseComponent component, NullPhaseActionEvent args)
+    {
+        if (CanPhase(uid))
+            Phase(uid);
+
+        args.Handled = true;
+    }
+
+    private void Toggle(EntityUid uid, NullPhaseComponent component, bool toggle)
+    {
+        if (toggle)
+            _actionsSystem.AddAction(uid, ref component.PhaseAction, NullPhaseAction, uid); // SSU: analyzer forbids literal action IDs
+        else
+            _actionsSystem.RemoveAction(uid, component.PhaseAction);
+    }
+
+    public bool CanPhase(EntityUid uid)
+    {
+        if (TryComp<NullSpaceComponent>(uid, out var nullspace))
+        {
+            var tileref = _turf.GetTileRef(Transform(uid).Coordinates);
+            if (tileref != null
+            && _physics.GetEntitiesIntersectingBody(uid, (int)CollisionGroup.Impassable).Count > 0)
+            {
+                _popup.PopupEntity(Loc.GetString("revenant-in-solid"), uid, uid);
+                return false;
+            }
+        }
+        else
+        {
+            if (_container.IsEntityInContainer(uid))
+            {
+                _popup.PopupEntity(Loc.GetString("phase-fail-generic"), uid, uid);
+                return false;
+            }
+
+            foreach (var entity in _lookup.GetEntitiesIntersecting(Transform(uid).Coordinates))
+            {
+                if (HasComp<NullSpaceBlockerComponent>(entity))
+                {
+                    _popup.PopupEntity(Loc.GetString("phase-fail-generic"), uid, uid);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void Phase(EntityUid uid)
+    {
+        if (TryComp<NullSpaceComponent>(uid, out var nullspace))
+        {
+            /* SSU: re-enable with Shadekin
+            if (TryComp<ShadekinComponent>(uid, out var shadekin))
+            {
+                if (shadekin.DoLightFlicker)
+                {
+                    var lightQuery = _lookup.GetEntitiesInRange(uid, 5, flags: LookupFlags.StaticSundries)
+                        .Where(x => HasComp<PoweredLightComponent>(x));
+                    foreach (var light in lightQuery)
+                        _ghost.DoGhostBooEvent(light);
+                }
+
+                var effect = SpawnAtPosition(ShadekinPhaseInEffect, Transform(uid).Coordinates);
+                Transform(effect).LocalRotation = Transform(uid).LocalRotation;
+            }
+            else
+            */
+                SpawnAtPosition(_shadekinShadow, Transform(uid).Coordinates);
+
+            RemComp(uid, nullspace);
+        }
+        else
+        {
+            EnsureComp<NullSpaceComponent>(uid);
+
+            /* SSU: re-enable with Shadekin
+            if (TryComp<ShadekinComponent>(uid, out var shadekin))
+            {
+                if (shadekin.DoLightFlicker)
+                {
+                    var lightQuery = _lookup.GetEntitiesInRange(uid, 5, flags: LookupFlags.StaticSundries)
+                        .Where(x => HasComp<PoweredLightComponent>(x));
+                    foreach (var light in lightQuery)
+                        _ghost.DoGhostBooEvent(light);
+                }
+
+                var effect = SpawnAtPosition(ShadekinPhaseOutEffect, Transform(uid).Coordinates);
+                Transform(effect).LocalRotation = Transform(uid).LocalRotation;
+            }
+            else
+            */
+                SpawnAtPosition(_shadekinShadow, Transform(uid).Coordinates);
+        }
+    }
+}
