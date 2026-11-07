@@ -1,3 +1,4 @@
+using Content.Server._SSU.Radio; // SSU: language hook
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Systems;
 using Content.Server.Power.Components;
@@ -48,7 +49,13 @@ public sealed partial class RadioSystem : SharedRadioSystem
     private void OnIntrinsicReceive(EntityUid uid, IntrinsicRadioReceiverComponent component, ref RadioReceiveEvent args)
     {
         if (TryComp(uid, out ActorComponent? actor))
-            _netMan.ServerSendMessage(args.ChatMsg, actor.PlayerSession.Channel);
+        {
+            // BEGIN SSU EDITS - Language hook, per-listener radio
+            var listenerEv = new RadioListenerMessageEvent(uid, args.ChatMsg);
+            RaiseLocalEvent(ref listenerEv);
+            // END SSU EDITS
+            _netMan.ServerSendMessage(listenerEv.ChatMsg, actor.PlayerSession.Channel); // SSU: per-listener radio
+        }
     }
 
     /// <inheritdoc/>
@@ -91,6 +98,17 @@ public sealed partial class RadioSystem : SharedRadioSystem
             NetEntity.Invalid,
             null);
         var chatMsg = new MsgChatMessage { Message = chat };
+
+        // BEGIN SSU EDITS - Language hook
+        var startEv = new RadioMessageStartEvent(messageSource, channel, name, speech, message, escapeMarkup, chatMsg);
+        RaiseLocalEvent(ref startEv);
+        if (startEv.Cancelled)
+        {
+            _messages.Remove(message);
+            return;
+        }
+        // END SSU EDITS
+
         var ev = new RadioReceiveEvent(message, messageSource, channel, radioSource, chatMsg);
 
         var sendAttemptEv = new RadioSendAttemptEvent(channel, radioSource);

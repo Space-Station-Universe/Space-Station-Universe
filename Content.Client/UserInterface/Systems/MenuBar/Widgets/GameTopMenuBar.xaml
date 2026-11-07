@@ -6,6 +6,7 @@
            xmlns:xe="clr-namespace:Content.Client.UserInterface.XamlExtensions"
            xmlns:ui="clr-namespace:Content.Client.UserInterface.Controls"
            xmlns:widgets="clr-namespace:Content.Client.UserInterface.Systems.MenuBar.Widgets"
+           xmlns:ssuin="clr-namespace:Content.Shared._SSU.Input;assembly=Content.Shared"
            Name = "MenuButtons"
            VerticalExpand="False"
            Orientation="Horizontal"
@@ -73,6 +74,18 @@
         HorizontalExpand="True"
         AppendStyleClass="{x:Static style:StyleClass.ButtonSquare}"
         />
+    <!-- BEGIN SSU EDITS - Language menu button, ssuin xmlns added above for it -->
+    <ui:MenuButton
+        Name="LanguageButton"
+        Access="Internal"
+        Icon="{xe:Tex '/Textures/_Starlight/Interface/language.png'}"
+        BoundKey = "{x:Static ssuin:SSUKeyFunctions.OpenLanguageMenu}"
+        ToolTip="Open the Language Menu"
+        MinSize="42 64"
+        HorizontalExpand="True"
+        AppendStyleClass="{x:Static style:StyleClass.ButtonSquare}"
+        />
+    <!-- END SSU EDITS -->
     <ui:MenuButton
         Name="AdminButton"
         Access="Internal"

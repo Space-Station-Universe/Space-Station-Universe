@@ -1,4 +1,5 @@
 using System.Numerics;
+using Content.Shared._Starlight.NullSpace; // SSU: NullSpace
 using Content.Shared.Administration.Logs;
 using Content.Shared.Damage.Components;
 using Content.Shared.Database;
@@ -42,10 +43,12 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         // Otherwise:
         //  1.) Hit the first entity that you targeted.
         //  2.) Hit the first entity that doesn't require you to aim at it specifically to be hit.
+        // SSU: Starlight NullSpace, ignore raycast results that hit a NullSpace entity.
         var result = _container.IsEntityOrParentInContainer(shooter)
             ? rayCastResults.FirstOrNull()
-            : rayCastResults.FirstOrNull(hit => hit.HitEntity == target
-                                                || CompOrNull<RequireProjectileTargetComponent>(hit.HitEntity)?.Active != true);
+            : rayCastResults.FirstOrNull(hit => (hit.HitEntity == target
+                                                || CompOrNull<RequireProjectileTargetComponent>(hit.HitEntity)?.Active != true)
+                                                && !HasComp<NullSpaceComponent>(hit.HitEntity)); // SSU: NullSpace
 
         var distanceTried = result?.Distance ?? ent.Comp.MaxDistance;
 
