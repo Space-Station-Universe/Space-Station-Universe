@@ -1,4 +1,5 @@
 using Content.Server._SSU.Chat;
+using Content.Server._SSU.Radio;
 using Content.Server._Starlight.Language;
 using Content.Server.Chat.Systems;
 using Content.Server.Popups;
@@ -8,6 +9,7 @@ using Content.Shared.ActionBlocker;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Popups;
+using Content.Shared.Radio;
 using Content.Shared.Speech;
 using Robust.Shared.Configuration;
 using Robust.Shared.Random;
@@ -32,6 +34,9 @@ public sealed partial class LanguageChatSystem : EntitySystem
 
     private readonly Stack<LanguageScope> _active = new();
 
+    // Radio language info, keyed by the shared chat message so listeners can look it up. Entries clean themselves up once the message is gone.
+    private readonly System.Runtime.CompilerServices.ConditionalWeakTable<MsgChatMessage, RadioText> _radio = new();
+
     public LanguagePrototype? CurrentLanguage => _active.Count > 0 ? _active.Peek().Language : null;
 
     public override void Initialize()
@@ -41,6 +46,8 @@ public sealed partial class LanguageChatSystem : EntitySystem
         SubscribeLocalEvent<InGameICMessageStartEvent>(OnICMessageStart);
         SubscribeLocalEvent<InGameICMessageListenerEvent>(OnICMessageListener);
         SubscribeLocalEvent<InGameICWhisperListenerEvent>(OnICWhisperListener);
+        SubscribeLocalEvent<RadioMessageStartEvent>(OnRadioMessageStart);
+        SubscribeLocalEvent<RadioListenerMessageEvent>(OnRadioListener);
     }
 
     public LanguagePrototype GetMessageLanguage(EntityUid source)
@@ -280,6 +287,106 @@ public sealed partial class LanguageChatSystem : EntitySystem
             return speech.FontId;
 
         return over.FontId ?? speech.FontId;
+    }
+
+    /// <summary>
+    /// Port of Starlight's language checks in RadioSystem.SendRadioMessage.
+    /// Blocks languages that can't go over radio (e.g. Sign) and applies the language's look for everyone who understands it.
+    /// </summary>
+    private void OnRadioMessageStart(ref RadioMessageStartEvent args)
+    {
+        var language = GetMessageLanguage(args.MessageSource);
+        if (!language.SpeechOverride.AllowRadio)
+        {
+            args.Cancelled = true;
+            return;
+        }
+
+        var text = new RadioText(language, args.Channel, args.Name, args.Speech, args.Message, args.EscapeMarkup);
+        _radio.AddOrUpdate(args.ChatMsg, text);
+
+        if (ChangesUnderstoodRadioWrap(language, args.Speech))
+            args.ChatMsg.Message.WrappedMessage = WrapRadio(text, args.Message, false);
+    }
+
+    /// <summary>
+    /// Port of Starlight's HeadsetSystem.OnHeadsetReceive language check, now shared with intrinsic radios.
+    /// </summary>
+    private void OnRadioListener(ref RadioListenerMessageEvent args)
+    {
+        if (!_radio.TryGetValue(args.ChatMsg, out var text))
+            return;
+
+        if (_language.CanUnderstand(args.Listener, text.Language.ID))
+            return;
+
+        if (text.Obfuscated == null)
+        {
+            var obfuscated = ObfuscateMessage(text.Message, text.Language);
+            text.Obfuscated = new MsgChatMessage
+            {
+                Message = new ChatMessage(ChatChannel.Radio, obfuscated, WrapRadio(text, obfuscated, true), NetEntity.Invalid, null),
+            };
+        }
+
+        args.ChatMsg = text.Obfuscated;
+    }
+
+    private static bool ChangesUnderstoodRadioWrap(LanguagePrototype language, SpeechVerbPrototype speech)
+    {
+        var over = language.SpeechOverride;
+        return language.IconVisibleIfUnderstood
+            || over.Color != null
+            || over.FontSize != null
+            || GetFontType(speech, language, false) != speech.FontId;
+    }
+
+    /// <summary>
+    /// Port of Starlight's RadioSystem.WrapRadioMessage, minus their job icon. Uses SSU's name links from RadioSystem.
+    /// </summary>
+    private string WrapRadio(RadioText text, string message, bool obfuscated)
+    {
+        var language = text.Language;
+        var over = language.SpeechOverride;
+        var speech = text.Speech;
+
+        var content = text.EscapeMarkup ? FormattedMessage.EscapeText(message) : message;
+
+        // Upstream radio strings color the whole line with the channel color, so only use the SSU ones when the language has its own color.
+        var languageColor = text.Channel.Color;
+        LocId wrapId = speech.Bold ? "chat-radio-message-wrap-bold" : "chat-radio-message-wrap";
+        if (over.Color is { } colorOverride)
+        {
+            languageColor = Color.InterpolateBetween(Color.White, colorOverride, colorOverride.A);
+            wrapId = speech.Bold ? "ssu-language-radio-message-wrap-bold" : "ssu-language-radio-message-wrap";
+        }
+
+        var nameString = _language.GetLanguageIcon(language, obfuscated)
+            ? $"[icon src=\"{language.Icon}\" tooltip=\"{language.Name}\"] {text.Name}"
+            : text.Name;
+
+        return Loc.GetString(wrapId,
+            ("color", text.Channel.Color),
+            ("languageColor", languageColor),
+            ("fontType", GetFontType(speech, language, obfuscated)),
+            ("fontSize", over.FontSize ?? speech.FontSize),
+            ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
+            ("channel", $"\\[{text.Channel.LocalizedName}\\]"),
+            ("name", nameString),
+            ("message", content));
+    }
+
+    private sealed class RadioText(LanguagePrototype language, RadioChannelPrototype channel, string name, SpeechVerbPrototype speech, string message, bool escapeMarkup)
+    {
+        public readonly LanguagePrototype Language = language;
+        public readonly RadioChannelPrototype Channel = channel;
+        public readonly string Name = name;
+        public readonly SpeechVerbPrototype Speech = speech;
+        public readonly string Message = message;
+        public readonly bool EscapeMarkup = escapeMarkup;
+
+        // Built on the first listener who doesn't understand, then reused.
+        public MsgChatMessage? Obfuscated;
     }
 
     private sealed record WhisperText(string Message, string Wrapped, string Muffled, string MuffledWrapped, string UnknownWrapped);

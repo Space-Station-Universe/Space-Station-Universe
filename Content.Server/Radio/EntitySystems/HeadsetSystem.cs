@@ -1,3 +1,4 @@
+using Content.Server._SSU.Radio; // SSU: language hook
 using Content.Shared.Chat;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Radio;
@@ -110,6 +111,12 @@ public sealed partial class HeadsetSystem : SharedHeadsetSystem
         }
 
         if (TryComp(parent, out ActorComponent? actor))
-            _netMan.ServerSendMessage(args.ChatMsg, actor.PlayerSession.Channel);
+        {
+            // BEGIN SSU EDITS - Language hook, per-listener radio
+            var listenerEv = new RadioListenerMessageEvent(parent, args.ChatMsg);
+            RaiseLocalEvent(ref listenerEv);
+            // END SSU EDITS
+            _netMan.ServerSendMessage(listenerEv.ChatMsg, actor.PlayerSession.Channel); // SSU: per-listener radio
+        }
     }
 }
