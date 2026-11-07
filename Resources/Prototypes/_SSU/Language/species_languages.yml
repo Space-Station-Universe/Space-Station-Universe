@@ -1,0 +1,106 @@
+# Languages each species knows, applied by SpeciesLanguageSystem on spawn.
+# Assignments taken from Starlight's species YAML.
+
+- type: speciesLanguages
+  id: Human
+  speaks:
+  - GalacticCommon
+  - SolCommon
+  understands:
+  - GalacticCommon
+  - SolCommon
+
+- type: speciesLanguages
+  id: Dwarf
+  speaks:
+  - GalacticCommon
+  - Grumbakul
+  understands:
+  - GalacticCommon
+  - Grumbakul
+
+- type: speciesLanguages
+  id: Reptilian # Unathi
+  speaks:
+  - GalacticCommon
+  - Draconic
+  understands:
+  - GalacticCommon
+  - Draconic
+
+- type: speciesLanguages
+  id: Moth # Noctilae
+  speaks:
+  - GalacticCommon
+  - Moffic
+  understands:
+  - GalacticCommon
+  - Moffic
+  - Mothroach
+
+- type: speciesLanguages
+  id: Arachnid
+  speaks:
+  - GalacticCommon
+  - Chittin
+  understands:
+  - GalacticCommon
+  - Chittin
+
+- type: speciesLanguages
+  id: Diona
+  speaks:
+  - GalacticCommon
+  - Sylvan
+  understands:
+  - GalacticCommon
+  - Sylvan
+
+- type: speciesLanguages
+  id: SlimePerson # Laspi
+  speaks:
+  - GalacticCommon
+  - Bubblish
+  understands:
+  - GalacticCommon
+  - Bubblish
+
+- type: speciesLanguages
+  id: Vox
+  speaks:
+  - GalacticCommon
+  - VoxPidgin
+  understands:
+  - GalacticCommon
+  - VoxPidgin
+
+- type: speciesLanguages
+  id: Vulpkanin
+  speaks:
+  - GalacticCommon
+  - Canilunzt
+  understands:
+  - GalacticCommon
+  - Canilunzt
+
+# No species language yet. Galactic Common only.
+- type: speciesLanguages
+  id: Skeleton
+  speaks:
+  - GalacticCommon
+  understands:
+  - GalacticCommon
+
+- type: speciesLanguages
+  id: Gingerbread
+  speaks:
+  - GalacticCommon
+  understands:
+  - GalacticCommon
+
+- type: speciesLanguages
+  id: Horror
+  speaks:
+  - GalacticCommon
+  understands:
+  - GalacticCommon
