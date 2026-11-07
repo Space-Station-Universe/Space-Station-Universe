@@ -1,4 +1,5 @@
 using System.Globalization;
+using Content.Server._SSU.Chat; // SSU: language hook
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.Chat.Managers;
@@ -189,6 +190,16 @@ public sealed partial class ChatSystem : SharedChatSystem
             checkRadioPrefix = false;
             message = message[1..];
         }
+		
+		// BEGIN SSU EDITS - Language hook
+        var icStartEv = new InGameICMessageStartEvent(source, message, desiredType);
+        RaiseLocalEvent(ref icStartEv);
+        using var icScope = icStartEv.Scope;
+        if (icStartEv.Cancelled)
+            return;
+        message = icStartEv.Message;
+        desiredType = icStartEv.DesiredType;
+		// END SSU EDITS
 
         bool shouldCapitalize = (desiredType != InGameICChatType.Emote);
         bool shouldPunctuate = _configurationManager.GetCVar(CCVars.ChatPunctuation);

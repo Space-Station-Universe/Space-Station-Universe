@@ -5,9 +5,9 @@ using Content.Shared._Starlight.Language.Components.Translators;
 
 namespace Content.Shared._Starlight.Language.Systems;
 
-public abstract class SharedTranslatorSystem : EntitySystem
+public abstract partial class SharedTranslatorSystem : EntitySystem // SSU: added partial
 {
-    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!; // SSU: dropped read only
 
     public override void Initialize()
     {

@@ -37,8 +37,8 @@ public abstract partial class SharedLanguageSystem : EntitySystem
     [ViewVariables(VVAccess.ReadOnly)]
     public HashSet<ProtoId<LanguagePrototype>> Languages = new();
 
-    [Dependency] protected readonly IPrototypeManager _prototype = default!;
-    [Dependency] protected readonly SharedGameTicker _ticker = default!;
+    [Dependency] protected IPrototypeManager _prototype = default!; // SSU: dropped readonly
+    [Dependency] protected GameTicker _ticker = default!; // SSU: upstream renamed SharedGameTicker to GameTicker, also can't be readonly anymore
 
     public override void Initialize()
     {

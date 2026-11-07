@@ -6,9 +6,9 @@ using Robust.Shared.Containers;
 
 namespace Content.Server._Starlight.Language;
 
-public sealed class TranslatorImplantSystem : EntitySystem
+public sealed partial class TranslatorImplantSystem : EntitySystem // SSU: needs to be partial
 {
-    [Dependency] private readonly LanguageSystem _language = default!;
+    [Dependency] private LanguageSystem _language = default!; // SSU: dropped readonly 
 
     public override void Initialize()
     {

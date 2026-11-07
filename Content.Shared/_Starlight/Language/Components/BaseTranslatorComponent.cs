@@ -1,5 +1,5 @@
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
+// using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;      // SSU: robust removed Custom.Prototype.List 
 
 namespace Content.Shared._Starlight.Language.Components.Translators;
 

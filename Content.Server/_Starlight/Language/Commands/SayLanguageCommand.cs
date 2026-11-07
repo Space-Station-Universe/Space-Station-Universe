@@ -1,3 +1,4 @@
+using Content.Server._SSU.Language; // SSU: language scope
 using Content.Server.Chat.Systems;
 using Content.Shared.Administration;
 using Content.Shared.Chat;
@@ -47,6 +48,8 @@ public sealed class SayLanguageCommand : IConsoleCommand
             return;
         }
 
-        chats.TrySendInGameICMessage(playerEntity, message, InGameICChatType.Speak, ChatTransmitRange.Normal, false, shell, player, languageOverride: language);
+        var languageChat = IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<LanguageChatSystem>();                             // SSU: languageOverride does not exist upstream, use language scope
+        using (languageChat.PushLanguage(language))                                                                                      // SSU: ditto
+            chats.TrySendInGameICMessage(playerEntity, message, InGameICChatType.Speak, ChatTransmitRange.Normal, false, shell, player); // SSU: removed languageOverride argument
     }
 }

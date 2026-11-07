@@ -9,18 +9,40 @@ using Robust.Shared.Input.Binding;
 using Robust.Shared.Utility;
 using static Robust.Client.UserInterface.Controls.BaseButton;
 using Content.Client.UserInterface.Systems.MenuBar.Widgets;
+using Content.Client.UserInterface.Systems.Gameplay; // SSU
+using Content.Shared._SSU.Input;                     // SSU
+using Robust.Client.Input;                           // SSU
 
 namespace Content.Client._Starlight.UserInterface.Systems.Language;
 
 [UsedImplicitly]
-public sealed class LanguageMenuUIController : UIController, IOnStateEntered<GameplayState>, IOnStateExited<GameplayState>
+public sealed partial class LanguageMenuUIController : UIController, IOnStateEntered<GameplayState>, IOnStateExited<GameplayState> // SSU: added partial cuz of robust update
 {
+    [Dependency] private IInputManager _input = default!; // SSU: register the key function without editing ContentContexts
+
     public LanguageMenuWindow? LanguageWindow;
     private MenuButton? LanguageButton => UIManager.GetActiveUIWidgetOrNull<GameTopMenuBar>()?.LanguageButton;
+
+    // BEGIN SSU EDITS - load the menu button without editing GameTopMenuBarUIController
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        var gameplayStateLoad = UIManager.GetUIController<GameplayStateLoadController>();
+        gameplayStateLoad.OnScreenLoad += LoadButton;
+        gameplayStateLoad.OnScreenUnload += UnloadButton;
+    }
+    // END SSU EDITS
 
     public void OnStateEntered(GameplayState state)
     {
         DebugTools.Assert(LanguageWindow == null);
+
+        // BEGIN SSU EDITS - register the key function without editing ContentContexts
+        var human = _input.Contexts.GetContext("human");
+        if (!human.FunctionExists(SSUKeyFunctions.OpenLanguageMenu))
+            human.AddFunction(SSUKeyFunctions.OpenLanguageMenu);
+        // END SSU EDITS
 
         LanguageWindow = UIManager.CreateWindow<LanguageMenuWindow>();
         LayoutContainer.SetAnchorPreset(LanguageWindow, LayoutContainer.LayoutPreset.CenterTop);
@@ -36,7 +58,7 @@ public sealed class LanguageMenuUIController : UIController, IOnStateEntered<Gam
                 LanguageButton.Pressed = true;
         };
 
-        CommandBinds.Builder.Bind(ContentKeyFunctions.OpenLanguageMenu,
+        CommandBinds.Builder.Bind(SSUKeyFunctions.OpenLanguageMenu, // SSU: key function lives in _SSU instead of ContentKeyFunctions
             InputCmdHandler.FromDelegate(_ => ToggleWindow())).Register<LanguageMenuUIController>();
     }
 

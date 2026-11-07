@@ -15,7 +15,7 @@
                        HorizontalExpand="True"></Label>
             </PanelContainer>
 
-            <ui:HLine></ui:HLine>
+            <ui:Separator /> <!-- SSU: upstream replaced HLine with Separator -->
 
             <ScrollContainer HorizontalExpand="True"
                              VerticalExpand="True"

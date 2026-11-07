@@ -33,7 +33,7 @@
     - type: HandheldTranslator
       enabled: false
     - type: Clothing
-      slots: [misc]
+      slots: [belt] # SSU: haven't added misc slot... yet :eyes:
 
 - type: entity
   categories: [HideSpawnMenu]
