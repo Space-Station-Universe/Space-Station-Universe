@@ -1,5 +1,7 @@
 using Content.Server.Administration.Logs;
 using Content.Server.Weapons.Ranged.Systems;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
+using Content.Shared._FarHorizons.LimbDamage.Components; // ditto
 using Content.Shared.Camera;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
@@ -20,6 +22,7 @@ public sealed partial class DamageOtherOnHitSystem : SharedDamageOtherOnHitSyste
     [Dependency] private Shared.Damage.Systems.DamageableSystem _damageable = default!;
     [Dependency] private SharedCameraRecoilSystem _sharedCameraRecoil = default!;
     [Dependency] private SharedColorFlashEffectSystem _color = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     public override void Initialize()
     {
@@ -33,7 +36,19 @@ public sealed partial class DamageOtherOnHitSystem : SharedDamageOtherOnHitSyste
         if (TerminatingOrDeleted(args.Target))
             return;
 
-        var dmg = _damageable.ChangeDamage(args.Target, component.Damage * _damageable.UniversalThrownDamageModifier, component.IgnoreResistances, origin: args.Component.Thrower);
+        // BEGIN SSU EDITS - Far Horizons limb damage, thrown items go for the thrower's targetted limb
+        if (!TryComp<LimbAimedThrowComponent>(uid, out var limbAim) ||
+            !TryComp<LimbDamageableComponent>(args.Target, out var limbDamageable) ||
+            !_limbDamage.CheckAttackHit((args.Target, limbDamageable), limbAim.Target, out var hitTarget) ||
+            hitTarget == null ||
+            hitTarget == limbDamageable.DefaultLimb ||
+            !_limbDamage.TryChangeLimbDamage((args.Target, limbDamageable), hitTarget.Value, component.Damage * _damageable.UniversalThrownDamageModifier, out var dmg, component.IgnoreResistances, origin: args.Component.Thrower))
+            dmg = _damageable.ChangeDamage(args.Target, component.Damage * _damageable.UniversalThrownDamageModifier, component.IgnoreResistances, origin: args.Component.Thrower);
+
+        if (limbAim != null)
+            RemCompDeferred<LimbAimedThrowComponent>(uid);
+        // var dmg = _damageable.ChangeDamage(args.Target, component.Damage * _damageable.UniversalThrownDamageModifier, component.IgnoreResistances, origin: args.Component.Thrower);
+        // END SSU EDITS
 
         // Log damage only for mobs. Useful for when people throw spears at each other, but also avoids log-spam when explosions send glass shards flying.
         if (HasComp<MobStateComponent>(args.Target))

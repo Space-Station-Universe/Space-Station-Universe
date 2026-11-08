@@ -1,5 +1,9 @@
+using System.Linq; // SSU: Far Horizons limb damage
 using System.Numerics;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
+using Content.Shared._FarHorizons.LimbDamage.Components; // ditto
 using Content.Shared._Starlight.NullSpace; // SSU: NullSpace
+using Content.Shared.Body; // SSU: Far Horizons limb damage
 using Content.Shared.Administration.Logs;
 using Content.Shared.Damage.Components;
 using Content.Shared.Database;
@@ -11,6 +15,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes; // SSU: Far Horizons limb damage
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Weapons.Hitscan.Systems;
@@ -21,6 +26,7 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
     [Dependency] private SharedContainerSystem _container = default!;
     [Dependency] private ISharedAdminLogManager _log = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     [Dependency] private EntityQuery<HitscanBasicVisualsComponent> _visualsQuery = default!;
 
@@ -36,9 +42,26 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
         var shooter = args.Shooter ?? args.Gun;
         var mapCords = _transform.ToMapCoordinates(args.FromCoordinates);
         var ray = new CollisionRay(mapCords.Position, args.ShotDirection, (int) ent.Comp.CollisionMask);
-        var rayCastResults = _physics.IntersectRay(mapCords.MapId, ray, ent.Comp.MaxDistance, shooter, false);
+        var rayCastResults = _physics.IntersectRay(mapCords.MapId, ray, ent.Comp.MaxDistance, shooter, false).ToList(); // SSU: ToList for limb damage
 
         var target = args.Target;
+
+        // BEGIN SSU EDITS - Far Horizons limb damage
+        // Aimed shots can miss the targetted limb, which means missing the target entirely.
+        ProtoId<OrganCategoryPrototype>? limbTarget = null;
+        if (target != null &&
+            rayCastResults.Any(p => p.HitEntity == target) &&
+            TryComp<LimbDamageableComponent>(target, out var targetLimbDamage) &&
+            TryComp<LimbTargettingComponent>(shooter, out var shooterTarget) &&
+            !_limbDamage.CheckAttackHit((target.Value, targetLimbDamage), (shooter, shooterTarget), out limbTarget))
+            rayCastResults.RemoveAll(p => p.HitEntity == target);
+
+        if (limbTarget != null)
+        {
+            var limbAimedShot = EnsureComp<LimbAimedHitscanShotComponent>(ent);
+            limbAimedShot.Target = limbTarget.Value;
+        }
+        // END SSU EDITS
         // If you are in a container, use the raycast result
         // Otherwise:
         //  1.) Hit the first entity that you targeted.

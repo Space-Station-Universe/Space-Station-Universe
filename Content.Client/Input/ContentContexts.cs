@@ -118,6 +118,22 @@ namespace Content.Client.Input
             human.AddFunction(ContentKeyFunctions.ToggleKnockdown);
             human.AddFunction(ContentKeyFunctions.OpenEmotesMenu);
 
+            // BEGIN SSU EDITS - Far Horizons limb targetting
+            human.AddFunction(ContentKeyFunctions.TargetTorso);
+            human.AddFunction(ContentKeyFunctions.TargetHead);
+            human.AddFunction(ContentKeyFunctions.TargetArmLeft);
+            human.AddFunction(ContentKeyFunctions.TargetArmRight);
+            human.AddFunction(ContentKeyFunctions.TargetHandLeft);
+            human.AddFunction(ContentKeyFunctions.TargetHandRight);
+            human.AddFunction(ContentKeyFunctions.TargetLegLeft);
+            human.AddFunction(ContentKeyFunctions.TargetLegRight);
+            human.AddFunction(ContentKeyFunctions.TargetFootLeft);
+            human.AddFunction(ContentKeyFunctions.TargetFootRight);
+
+            human.AddFunction(ContentKeyFunctions.TargetNextLimb);
+            human.AddFunction(ContentKeyFunctions.TargetPreviousLimb);
+            // END SSU EDITS
+
             var ghost = contexts.New("ghost", "human");
             ghost.AddFunction(EngineKeyFunctions.MoveUp);
             ghost.AddFunction(EngineKeyFunctions.MoveDown);

@@ -217,19 +217,31 @@
   parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganSkeletonPersonExternal ]
   id: OrganSkeletonPersonTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganSkeletonPersonExternal ]
+  id: DamageableLimbVisualsSkeleton
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#555555AA"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsSkeleton, OrganBaseHead, OrganSkeletonPersonExternal ] # SSU: Far Horizons limb damage
   id: OrganSkeletonPersonHead
   components:
   - type: Sprite
     state: skull_icon
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganSkeletonPersonExternal ]
+  parent: [ DamageableLimbVisualsSkeleton, OrganBaseArmLeft, OrganSkeletonPersonExternal ] # SSU: Far Horizons limb damage
   id: OrganSkeletonPersonArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganSkeletonPersonExternal ]
+  parent: [ DamageableLimbVisualsSkeleton, OrganBaseArmRight, OrganSkeletonPersonExternal ] # SSU: Far Horizons limb damage
   id: OrganSkeletonPersonArmRight
 
 - type: entity
@@ -241,11 +253,11 @@
   id: OrganSkeletonPersonHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganSkeletonPersonExternal ]
+  parent: [ DamageableLimbVisualsSkeleton, OrganBaseLegLeft, OrganSkeletonPersonExternal ] # SSU: Far Horizons limb damage
   id: OrganSkeletonPersonLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganSkeletonPersonExternal ]
+  parent: [ DamageableLimbVisualsSkeleton, OrganBaseLegRight, OrganSkeletonPersonExternal ] # SSU: Far Horizons limb damage
   id: OrganSkeletonPersonLegRight
 
 - type: entity

@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Server.Cargo.Systems;
 using Content.Server.Weapons.Ranged.Components;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 using Content.Shared.Cargo;
 using Content.Shared.Damage;
 using Content.Shared.Projectiles;
@@ -24,6 +25,7 @@ public sealed partial class GunSystem : SharedGunSystem
 {
     [Dependency] private PricingSystem _pricing = default!;
     [Dependency] private SharedMapSystem _map = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     private const float DamagePitchVariation = 0.05f;
 
@@ -204,6 +206,7 @@ public sealed partial class GunSystem : SharedGunSystem
         {
             var targeted = EnsureComp<TargetedProjectileComponent>(uid);
             targeted.Target = target;
+            targeted.LimbTarget = user == null ? null : _limbDamage.GetCurrentSelectedTarget(user.Value); // SSU: Far Horizons limb damage
             Dirty(uid, targeted);
         }
 

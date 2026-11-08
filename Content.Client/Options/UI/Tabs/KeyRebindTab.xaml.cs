@@ -213,6 +213,22 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.RotateObjectCounterclockwise);
             AddButton(ContentKeyFunctions.FlipObject);
 
+            // BEGIN SSU EDITS - Far Horizons limb targetting
+            AddHeader("ui-options-header-limb-targetting");
+            AddButton(ContentKeyFunctions.TargetNextLimb);
+            AddButton(ContentKeyFunctions.TargetPreviousLimb);
+            AddButton(ContentKeyFunctions.TargetTorso);
+            AddButton(ContentKeyFunctions.TargetHead);
+            AddButton(ContentKeyFunctions.TargetArmLeft);
+            AddButton(ContentKeyFunctions.TargetArmRight);
+            AddButton(ContentKeyFunctions.TargetHandLeft);
+            AddButton(ContentKeyFunctions.TargetHandRight);
+            AddButton(ContentKeyFunctions.TargetLegLeft);
+            AddButton(ContentKeyFunctions.TargetLegRight);
+            AddButton(ContentKeyFunctions.TargetFootLeft);
+            AddButton(ContentKeyFunctions.TargetFootRight);
+            // END SSU EDITS
+
             AddHeader("ui-options-header-ui");
             AddButton(ContentKeyFunctions.FocusChat);
             AddButton(ContentKeyFunctions.FocusLocalChat);

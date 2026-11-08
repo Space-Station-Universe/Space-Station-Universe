@@ -1,0 +1,3 @@
+# Ported from Far Horizons Resources/Prototypes/_FarHorizons/tags.yml, only the tags SSU uses so far.
+- type: Tag
+  id: Inorganic # Limb damage examine text uses the silicon wording for limbs with this tag

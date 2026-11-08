@@ -75,6 +75,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageHead # SSU: Far Horizons limb damage
   id: OrganBaseHead
   name: head
   abstract: true
@@ -108,6 +109,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageArmLeft # SSU: Far Horizons limb damage
   id: OrganBaseArmLeft
   name: left arm
   abstract: true
@@ -130,6 +132,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageArmRight # SSU: Far Horizons limb damage
   id: OrganBaseArmRight
   name: right arm
   abstract: true
@@ -151,6 +154,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageHandLeft # SSU: Far Horizons limb damage
   id: OrganBaseHandLeft
   name: left hand
   abstract: true
@@ -176,6 +180,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageHandRight # SSU: Far Horizons limb damage
   id: OrganBaseHandRight
   name: right hand
   abstract: true
@@ -202,6 +207,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageLegLeft # SSU: Far Horizons limb damage
   id: OrganBaseLegLeft
   name: left leg
   abstract: true
@@ -224,6 +230,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageLegRight # SSU: Far Horizons limb damage
   id: OrganBaseLegRight
   name: right leg
   abstract: true
@@ -245,6 +252,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageFootLeft # SSU: Far Horizons limb damage
   id: OrganBaseFootLeft
   name: left foot
   abstract: true
@@ -266,6 +274,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageFootRight # SSU: Far Horizons limb damage
   id: OrganBaseFootRight
   name: right foot
   abstract: true

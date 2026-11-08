@@ -132,5 +132,21 @@ namespace Content.Shared.Input
         public static readonly BoundKeyFunction MappingRemoveDecal = "MappingRemoveDecal";
         public static readonly BoundKeyFunction MappingCancelEraseDecal = "MappingCancelEraseDecal";
         public static readonly BoundKeyFunction MappingOpenContextMenu = "MappingOpenContextMenu";
+
+        // BEGIN SSU EDITS - Far Horizons limb targetting
+        public static readonly BoundKeyFunction TargetTorso = "TargetTorso";
+        public static readonly BoundKeyFunction TargetHead = "TargetHead";
+        public static readonly BoundKeyFunction TargetArmLeft = "TargetArmLeft";
+        public static readonly BoundKeyFunction TargetArmRight = "TargetArmRight";
+        public static readonly BoundKeyFunction TargetHandLeft = "TargetHandLeft";
+        public static readonly BoundKeyFunction TargetHandRight = "TargetHandRight";
+        public static readonly BoundKeyFunction TargetLegLeft = "TargetLegLeft";
+        public static readonly BoundKeyFunction TargetLegRight = "TargetLegRight";
+        public static readonly BoundKeyFunction TargetFootLeft = "TargetFootLeft";
+        public static readonly BoundKeyFunction TargetFootRight = "TargetFootRight";
+
+        public static readonly BoundKeyFunction TargetNextLimb = "TargetNextLimb";
+        public static readonly BoundKeyFunction TargetPreviousLimb = "TargetPreviousLimb";
+        // END SSU EDITS
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 using Content.Shared.ActionBlocker;
 using Content.Shared.Actions.Events;
 using Content.Shared.Administration.Components;
@@ -70,6 +71,7 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     [Dependency] private DamageExamineSystem _damageExamine = default!;
     [Dependency] private SharedEntityEffectsSystem _effects = default!;
     [Dependency] private ItemToggleSystem _toggle = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     [Dependency] private EntityQuery<DamageableComponent> _damageQuery = default!;
 
@@ -520,7 +522,8 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             !HasComp<DamageableComponent>(target) ||
             !TryComp(target, out TransformComponent? targetXform) ||
             // Not in LOS.
-            !InRange(user, target.Value, component.Range, session))
+            !InRange(user, target.Value, component.Range, session) ||
+            !_limbDamage.CheckAttackHit(target.Value, user, out var overrideTarget)) // SSU: Far Horizons limb damage, aimed attacks can miss
         {
             // Leave IsHit set to true, because the only time it's set to false
             // is when a melee weapon is examined. Misses are inferred from an
@@ -573,7 +576,9 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
 
         var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
 
-        if (Damageable.TryChangeDamage(target.Value, modifiedDamage, out var damageResult, origin:user, ignoreResistances:resistanceBypass))
+        if ((overrideTarget != null &&
+             _limbDamage.TryChangeLimbDamage(target.Value, overrideTarget.Value, modifiedDamage, out var damageResult, origin:user, ignoreResistances:resistanceBypass)) || // SSU: Far Horizons limb damage
+            Damageable.TryChangeDamage(target.Value, modifiedDamage, out damageResult, origin:user, ignoreResistances:resistanceBypass)) // SSU: out var moved up
         {
             // If the target has stamina and is taking blunt damage, they should also take stamina damage based on their blunt to stamina factor
             if (damageResult.DamageDict.TryGetValue("Blunt", out var bluntDamage))
@@ -725,7 +730,14 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
             RaiseLocalEvent(entity, attackedEvent);
             var modifiedDamage = DamageSpecifier.ApplyModifierSets(damage + hitEvent.BonusDamage + attackedEvent.BonusDamage, hitEvent.ModifiersList);
 
-            var damageResult = Damageable.ChangeDamage(entity, modifiedDamage, origin: user, ignoreResistances: resistanceBypass);
+            // BEGIN SSU EDITS - Far Horizons limb damage, wide swings can scatter onto a limb
+            var targetLimb = _limbDamage.TryScatterHitTarget(entity, user);
+            DamageSpecifier damageResult;
+            if (targetLimb == null ||
+                !_limbDamage.TryChangeLimbDamage(entity, targetLimb.Value, modifiedDamage, out damageResult, origin: user, ignoreResistances: resistanceBypass))
+                damageResult = Damageable.ChangeDamage(entity, modifiedDamage, origin: user, ignoreResistances: resistanceBypass);
+            // var damageResult = Damageable.ChangeDamage(entity, modifiedDamage, origin: user, ignoreResistances: resistanceBypass);
+            // END SSU EDITS
 
             if (damageResult.GetTotal() > FixedPoint2.Zero)
             {

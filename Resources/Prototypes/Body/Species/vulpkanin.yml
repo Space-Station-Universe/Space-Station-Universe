@@ -146,6 +146,10 @@
   id: MobVulpkanin
   name: Urist McArfArf
   components:
+  # BEGIN SSU EDITS - Far Horizons limb damage
+  - type: LimbDamageable
+    proto: LimbTargetVulp
+  # END SSU EDITS
   - type: DamageVisuals
     damageOverlayGroups:
       Brute:
@@ -248,8 +252,20 @@
   parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganVulpkaninExternal ]
   id: OrganVulpkaninTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganVulpkaninExternal ]
+  id: DamageableLimbVisualsVulpkanin
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#ccac1f"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsVulpkanin, OrganBaseHead, OrganVulpkaninExternal ] # SSU: Far Horizons limb damage
   id: OrganVulpkaninHead
   components:
   - type: VisualOrganMarkings
@@ -270,11 +286,11 @@
             state: hair
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganVulpkaninExternal ]
+  parent: [ DamageableLimbVisualsVulpkanin, OrganBaseArmLeft, OrganVulpkaninExternal ] # SSU: Far Horizons limb damage
   id: OrganVulpkaninArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganVulpkaninExternal ]
+  parent: [ DamageableLimbVisualsVulpkanin, OrganBaseArmRight, OrganVulpkaninExternal ] # SSU: Far Horizons limb damage
   id: OrganVulpkaninArmRight
 
 - type: entity
@@ -286,11 +302,11 @@
   id: OrganVulpkaninHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganVulpkaninExternal ]
+  parent: [ DamageableLimbVisualsVulpkanin, OrganBaseLegLeft, OrganVulpkaninExternal ] # SSU: Far Horizons limb damage
   id: OrganVulpkaninLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganVulpkaninExternal ]
+  parent: [ DamageableLimbVisualsVulpkanin, OrganBaseLegRight, OrganVulpkaninExternal ] # SSU: Far Horizons limb damage
   id: OrganVulpkaninLegRight
 
 - type: entity

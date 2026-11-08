@@ -1,3 +1,4 @@
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
@@ -15,12 +16,15 @@ namespace Content.Shared.EntityEffects.Effects.Damage;
 public sealed partial class EvenHealthChangeEntityEffectSystem : EntityEffectSystem<DamageableComponent, EvenHealthChange>
 {
     [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     protected override void Effect(Entity<DamageableComponent> entity, ref EntityEffectEvent<EvenHealthChange> args)
     {
         foreach (var (group, amount) in args.Effect.Damage)
         {
             _damageable.HealEvenly(entity.AsNullable(), amount * args.Scale, group);
+            if (args.Effect.AffectAllLimbs)
+                _limbDamage.HealAllEvenly(entity.Owner, amount * args.Scale, group); // SSU: Far Horizons limb damage
         }
     }
 }
@@ -39,6 +43,11 @@ public sealed partial class EvenHealthChange : EntityEffectBase<EvenHealthChange
     /// </summary>
     [DataField]
     public bool IgnoreResistances = true;
+
+    /// <summary>
+    /// SSU: Far Horizons limb damage, also heal every limb.
+    /// </summary>
+    [DataField] public bool AffectAllLimbs;
 
     public override string EntityEffectGuidebookText(IPrototypeManager prototype, IEntitySystemManager entSys)
     {

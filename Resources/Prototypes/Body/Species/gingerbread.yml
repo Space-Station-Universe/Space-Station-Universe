@@ -102,16 +102,28 @@
   parent: [ OrganBaseTorso, OrganGingerbreadExternal ]
   id: OrganGingerbreadTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganGingerbreadExternal ]
+  id: DamageableLimbVisualsGingerbread
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#896e55"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsGingerbread, OrganBaseHead, OrganGingerbreadExternal ] # SSU: Far Horizons limb damage
   id: OrganGingerbreadHead
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganGingerbreadExternal ]
+  parent: [ DamageableLimbVisualsGingerbread, OrganBaseArmLeft, OrganGingerbreadExternal ] # SSU: Far Horizons limb damage
   id: OrganGingerbreadArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganGingerbreadExternal ]
+  parent: [ DamageableLimbVisualsGingerbread, OrganBaseArmRight, OrganGingerbreadExternal ] # SSU: Far Horizons limb damage
   id: OrganGingerbreadArmRight
 
 - type: entity
@@ -123,11 +135,11 @@
   id: OrganGingerbreadHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganGingerbreadExternal ]
+  parent: [ DamageableLimbVisualsGingerbread, OrganBaseLegLeft, OrganGingerbreadExternal ] # SSU: Far Horizons limb damage
   id: OrganGingerbreadLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganGingerbreadExternal ]
+  parent: [ DamageableLimbVisualsGingerbread, OrganBaseLegRight, OrganGingerbreadExternal ] # SSU: Far Horizons limb damage
   id: OrganGingerbreadLegRight
 
 - type: entity

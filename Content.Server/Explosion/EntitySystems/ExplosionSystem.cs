@@ -6,6 +6,8 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Destructible;
 using Content.Server.NodeContainer.EntitySystems;
 using Content.Server.NPC.Pathfinding;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
+using Content.Shared._FarHorizons.LimbDamage.Components; // ditto
 using Content.Shared.Atmos.Components;
 using Content.Shared.Camera;
 using Content.Shared.CCVar;
@@ -60,6 +62,10 @@ public sealed partial class ExplosionSystem : SharedExplosionSystem
     [Dependency] private EntityQuery<ActorComponent> _actorQuery = default!;
     [Dependency] private EntityQuery<DestructibleComponent> _destructibleQuery = default!;
     [Dependency] private EntityQuery<DamageableComponent> _damageableQuery = default!;
+    [Dependency] private EntityQuery<LimbDamageableComponent> _limbDamageableQuery = default!; // SSU: Far Horizons limb damage
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
+
+    private const float LimbDamageMultiplier = 4f; // SSU: Far Horizons limb damage, limbs take this much more than the torso, split randomly between them
     [Dependency] private EntityQuery<ExplosionResistanceComponent> _explosionResistanceQuery = default!;
     [Dependency] private EntityQuery<InjurableComponent> _injurableQuery = default!;
     [Dependency] private EntityQuery<AirtightComponent> _airtightQuery = default!;

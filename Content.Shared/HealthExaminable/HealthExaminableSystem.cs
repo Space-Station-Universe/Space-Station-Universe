@@ -1,3 +1,4 @@
+using Content.Shared._FarHorizons.LimbDamage.Components; // SSU: Far Horizons limb damage
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
@@ -22,7 +23,8 @@ public sealed partial class HealthExaminableSystem : EntitySystem
 
     private void OnGetExamineVerbs(EntityUid uid, HealthExaminableComponent component, GetVerbsEvent<ExamineVerb> args)
     {
-        if (!TryComp<DamageableComponent>(uid, out var damage))
+        if (!TryComp<DamageableComponent>(uid, out var damage) ||
+            HasComp<LimbDamageableComponent>(uid)) // SSU: Far Horizons limb damage has its own per-limb examine
             return;
 
         var detailsRange = _examineSystem.IsInDetailsRange(args.User, uid);
