@@ -153,6 +153,29 @@ public partial class LimbDamageSystem
         return false;
     }
 
+    // BEGIN SSU EDITS - healing moves on to the next damaged limb
+    public ProtoId<OrganCategoryPrototype>? GetDamagedLimb(Entity<LimbDamageableComponent?> target,
+        HealingComponent healing, ProtoId<OrganCategoryPrototype>? preferred = null)
+    {
+        if (!Resolve(target, ref target.Comp, false))
+            return null;
+
+        if (preferred != null && LimbHasDamage(target, preferred.Value, healing))
+            return preferred;
+
+        foreach (var limb in GetAllDamageable(target))
+        {
+            if (limb.Comp.Organ?.Category is not { } category || category == preferred)
+                continue;
+
+            if (LimbHasDamage(target, category, healing))
+                return category;
+        }
+
+        return null;
+    }
+    // END SSU EDITS
+
     public bool CheckAttackHit(Entity<LimbDamageableComponent?> target, ProtoId<OrganCategoryPrototype> targetLimb,
         out ProtoId<OrganCategoryPrototype>? overrideTarget)
     {

@@ -18,6 +18,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
 using Robust.Shared.Audio.Systems;
+using Content.Shared.Body; // SSU: Far Horizons limb damage
+using Robust.Shared.Prototypes; // ditto
 
 namespace Content.Shared.Medical.Healing;
 
@@ -138,6 +140,10 @@ public sealed partial class HealingSystem : EntitySystem
 
         _audio.PlayPredicted(healing.HealingEndSound, target.Owner, args.User);
 
+        // BEGIN SSU EDITS - move on to the next damaged limb once the targetted one is healed
+        args.TargettedLimb = PickLimb((args.Used.Value, healing), target, args.TargettedLimb);
+        // END SSU EDITS
+
         // Logic to determine the whether or not to repeat the healing action
         args.Repeat = HasDamage((args.Used.Value, healing), target, args.User) && !dontRepeat; // SSU: Far Horizons limb damage, pass the healer
         args.Handled = true;
@@ -153,15 +159,40 @@ public sealed partial class HealingSystem : EntitySystem
             args.Args.Delay = healing.Delay * GetScaledHealingPenalty(target.Owner, healing.SelfHealPenaltyMultiplier);
     }
 
-    private bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target, EntityUid? origin = null) // SSU: origin for limb damage
+    // BEGIN SSU EDITS - Far Horizons limb damage, keep the limb while damaged, else move on. Null is the body (torso).
+    private ProtoId<OrganCategoryPrototype>? PickLimb(Entity<HealingComponent> healing, Entity<DamageableComponent> target,
+        ProtoId<OrganCategoryPrototype>? current)
     {
-        // BEGIN SSU EDITS - Far Horizons limb damage, the healer's targetted limb counts too
-        if (origin != null)
+        if (current != null)
+            return _limbDamage.GetDamagedLimb(target.Owner, healing.Comp, current);
+
+        return BodyHasDamage(healing, target) ? null : _limbDamage.GetDamagedLimb(target.Owner, healing.Comp);
+    }
+
+    private bool BodyHasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target)
+    {
+        var damageableDict = _damageable.GetAllDamage(target.AsNullable()).DamageDict;
+        foreach (var type in healing.Comp.Damage.DamageDict)
         {
-            var limbTarget = _limbDamage.GetCurrentValidTarget(target.Owner, origin.Value);
-            if (limbTarget != null && _limbDamage.LimbHasDamage(target.Owner, limbTarget.Value, healing.Comp))
+            if (damageableDict.TryGetValue(type.Key, out var amount) && amount > 0)
                 return true;
         }
+
+        return false;
+    }
+    // END SSU EDITS
+
+    private bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target, EntityUid? origin = null) // SSU: origin for limb damage
+    {
+        // BEGIN SSU EDITS - Far Horizons limb damage, damage on any limb counts too
+        if (_limbDamage.GetDamagedLimb(target.Owner, healing.Comp) != null)
+            return true;
+        // if (origin != null)
+        // {
+        //     var limbTarget = _limbDamage.GetCurrentValidTarget(target.Owner, origin.Value);
+        //     if (limbTarget != null && _limbDamage.LimbHasDamage(target.Owner, limbTarget.Value, healing.Comp))
+        //         return true;
+        // }
         // END SSU EDITS
 
         var damageableDict = _damageable.GetAllDamage(target.AsNullable()).DamageDict;
@@ -254,6 +285,7 @@ public sealed partial class HealingSystem : EntitySystem
             : healing.Comp.Delay * GetScaledHealingPenalty(target, healing.Comp.SelfHealPenaltyMultiplier);
 
         var limbTarget = _limbDamage.GetCurrentValidTarget(target.Owner, user); // SSU: Far Horizons limb damage
+        limbTarget = PickLimb(healing, target!, limbTarget); // SSU: start somewhere damaged if the targetted limb is already healed
 
         var doAfterEventArgs =
             new DoAfterArgs(EntityManager, user, delay, new HealingDoAfterEvent(limbTarget), target, target: target, used: healing) // SSU: pass limbTarget
