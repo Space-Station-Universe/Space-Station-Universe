@@ -5,6 +5,18 @@
   suffix: Generic
   description: A suit that protects against biological contamination.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      HandRight: {}
+      HandLeft: {}
+      LegRight: {}
+      LegLeft: {}
+      FootRight: {}
+      FootLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Bio/general.rsi
   - type: Clothing
@@ -42,6 +54,18 @@
   suffix: Janitor
   description: A suit that protects against biological contamination and caustic spills.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      HandRight: {}
+      HandLeft: {}
+      LegRight: {}
+      LegLeft: {}
+      FootRight: {}
+      FootLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Bio/janitor.rsi
   - type: Clothing
@@ -70,6 +94,18 @@
   suffix: Security
   description: A suit that protects against biological contamination, kitted out with additional armor.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      HandRight: {}
+      HandLeft: {}
+      LegRight: {}
+      LegLeft: {}
+      FootRight: {}
+      FootLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Bio/security.rsi
   - type: Clothing

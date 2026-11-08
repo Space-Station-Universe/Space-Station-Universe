@@ -100,6 +100,18 @@
   name: paramedic void suit
   description: A void suit made for paramedics.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      HandRight: {}
+      HandLeft: {}
+      LegRight: {}
+      LegLeft: {}
+      FootRight: {}
+      FootLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Hardsuits/paramed.rsi
     layers:

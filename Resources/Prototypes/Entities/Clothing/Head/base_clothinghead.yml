@@ -151,6 +151,11 @@
   name: base hardsuit helmet
   categories: [ HideSpawnMenu ]
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head: {}
+  # END SSU EDITS
 # SlotBlocker blocked until UI change
 #  - type: SlotBlock
 #    slots: [ears, eyes, mask]
@@ -272,6 +277,11 @@
   description: A hood, made to keep your head warm.
   categories: [ HideSpawnMenu ]
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head: {}
+  # END SSU EDITS
   - type: Sprite
     state: icon
   - type: Clickable

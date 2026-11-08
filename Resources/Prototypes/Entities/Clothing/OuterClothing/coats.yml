@@ -15,6 +15,14 @@
   name: detective's armored trenchcoat
   description: An 20th-century trenchcoat with an armored underlay. Someone who wears this means serious business.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/detective.rsi
   - type: Clothing
@@ -32,6 +40,14 @@
   name: noir armored trenchcoat
   description: Ah, your trusty coat. There's a few tears here and there, giving it a more timely look. Or at least, that's what you told yourself when you found out gettin' it repaired would set you back 200 spesos.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/detective_grey.rsi
   - type: Clothing
@@ -65,6 +81,14 @@
   parent: [ ClothingOuterArmorBase, ClothingOuterStorageBase ]
   id: ClothingOuterArmorHoS
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Armor
     modifiers:
       coefficients:
@@ -79,6 +103,14 @@
   parent: [ ClothingOuterArmorBase, ClothingOuterStorageBase ]
   id: ClothingOuterArmorWarden
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Armor
     modifiers:
       coefficients:
@@ -128,6 +160,14 @@
   name: trench coat
   description: A comfy trench coat.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/trenchcoat.rsi
   - type: Clothing
@@ -143,6 +183,14 @@
   name: lab coat
   description: A suit that protects against minor chemical spills.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat.rsi
   - type: Clothing
@@ -163,6 +211,14 @@
   name: chemist lab coat
   description: A suit that protects against minor chemical spills. Has an orange stripe on the shoulder.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_chem.rsi
   - type: Clothing
@@ -183,6 +239,14 @@
   name: virologist lab coat
   description: A suit that protects against bacteria and viruses. Has an green stripe on the shoulder.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_viro.rsi
   - type: Clothing
@@ -203,6 +267,14 @@
   name: geneticist lab coat
   description: A suit that protects against minor chemical spills. Has an blue stripe on the shoulder.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_gene.rsi
   - type: Clothing
@@ -223,6 +295,14 @@
   name: chief medical officer's lab coat
   description: Custom made blue lab coat for the Chief Medical Officer, offers improved protection against chemical spills and minor cuts.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_cmo.rsi
   - type: Clothing
@@ -245,6 +325,14 @@
   name: scientist lab coat
   description: A suit that protects against minor chemical spills. Has a purple stripe on the shoulder.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_sci.rsi
   - type: Clothing
@@ -265,6 +353,14 @@
   name: roboticist lab coat
   description: More like an eccentric coat than a labcoat. Helps pass off bloodstains as part of the aesthetic. Comes with red shoulder pads.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_robo.rsi
   - type: Clothing
@@ -285,6 +381,14 @@
   name: research director lab coat
   description: Woven with top of the line technology, this labcoat helps protect against radiation in similar way to the experimental hardsuit.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_rd.rsi
   - type: Clothing
@@ -350,6 +454,14 @@
   name: samurai dogi
   description: Dogi is a type of traditional Japanese clothing. The dogi is made of heavy, durable fabric, it is practical in combat and stylish in appearance. It is decorated with intricate patterns and embroidery on the back.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/dogi.rsi
   - type: Clothing
@@ -400,6 +512,14 @@
   name: armored medical gown
   description: The version of the medical gown, with elements of a bulletproof vest, looks strange, but your heart is protected.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/brigmedic.rsi
   - type: Clothing
@@ -419,6 +539,14 @@
   name: senior researcher lab coat
   description: A suit that protects against minor chemical spills. Has a purple collar and wrist trims.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_senior_researcher.rsi
   - type: Clothing
@@ -439,6 +567,14 @@
   name: senior physician lab coat
   description: A suit that protects against minor chemical spills. Has light blue sleeves and an orange waist trim.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Coats/labcoat_senior_physician.rsi
   - type: Clothing
