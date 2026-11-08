@@ -19,6 +19,10 @@ public partial class LimbDamageSystem
         if (args.DamageDelta == null || args.DamageDelta.Empty || !_timing.IsFirstTimePredicted)
             return;
 
+        // SSU: detaching/destroying on the client deletes server entities (predicted DetachedBody takes the limb with it) and crashes the client
+        if (_net.IsClient)
+            return;
+
         foreach (var effect in ent.Comp.Effects)
         {
             if ((!args.DamageIncreased && !effect.TriggerOnHeal) ||

@@ -62,7 +62,8 @@ public sealed partial class LimbDamageVisualsSystem : VisualizerSystem<LimbDamag
             TryComp<SpriteComponent>(organ.Body, out var bodySprite))
             body = (organ.Body.Value, bodySprite);
 
-        var connectedOrgan = HasComp<ChildOrganComponent>(ent); // SSU: was ConnectedOrganComponent
+        // var connectedOrgan = HasComp<ConnectedOrganComponent>(ent); // SSU: upstream DetachedBody draws detached limbs, a loose organ draws on its own sprite
+        var connectedOrgan = false;
 
         foreach (var dmgGroup in delta)
         {
