@@ -451,6 +451,10 @@ public sealed partial class ExplosionSystem
                 if (!_damageableQuery.TryComp(entity, out var damageable))
                     continue;
 
+                // SSU: Far Horizons limb damage
+                if (_limbDamageableQuery.TryComp(entity, out var damageableLimb))
+                    _limbDamage.ChangeDamageRandom((entity, damageableLimb), damage * LimbDamageMultiplier);
+
                 // TODO EXPLOSIONS turn explosions into entities, and pass the the entity in as the damage origin.
                 _damageableSystem.ChangeDamage((entity, damageable), damage);
 

@@ -5,6 +5,11 @@
   suffix: Generic
   description: A hood that protects the head and face from biological contaminants.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Head/Hoods/Bio/general.rsi
   - type: Clothing
@@ -155,6 +160,11 @@
   name: radiation hood
   description: A hood of the hazmat suit, designed for protection from high radioactivity.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Head/Hoods/rad.rsi
   - type: Clothing

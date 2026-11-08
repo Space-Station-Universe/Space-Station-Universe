@@ -8,7 +8,7 @@ namespace Content.Shared.Body;
 /// </summary>
 /// <seealso cref="BodySystem" />
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-[Access(typeof(BodySystem))]
+[Access(typeof(BodySystem), typeof(Content.Shared.Starlight.Medical.Surgery.SharedSurgerySystem))] // SSU: surgery sets the category of custom organs
 public sealed partial class OrganComponent : Component
 {
     /// <summary>

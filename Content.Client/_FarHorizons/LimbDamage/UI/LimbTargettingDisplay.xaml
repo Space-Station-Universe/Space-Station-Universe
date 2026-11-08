@@ -1,0 +1,6 @@
+<limbDamage:LimbTargettingDisplay
+    xmlns="https://spacestation14.io"
+    xmlns:limbDamage="clr-namespace:Content.Client._FarHorizons.LimbDamage.UI"
+    MaxSize="90 90"
+    MouseFilter="Stop"
+    />

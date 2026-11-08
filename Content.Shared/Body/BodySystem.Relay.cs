@@ -1,3 +1,4 @@
+using Content.Shared._FarHorizons.LimbDamage.Components; // SSU: Far Horizons limb damage
 using Content.Shared.Bed.Sleep;
 using Content.Shared.Body.Events;
 using Content.Shared.Chat;
@@ -8,6 +9,7 @@ using Content.Shared.Gibbing;
 using Content.Shared.Humanoid;
 using Content.Shared.Medical;
 using Content.Shared.Mobs;
+using Content.Shared.Rejuvenate; // SSU: Far Horizons limb damage
 using JetBrains.Annotations;
 
 namespace Content.Shared.Body;
@@ -33,6 +35,12 @@ public sealed partial class BodySystem
 
         SubscribeLocalEvent<BodyComponent, ToggleEyesActionEvent>(RelayBodyEvent);
         SubscribeLocalEvent<BodyComponent, CanSeeAttemptEvent>(RelayBodyEvent);
+
+        // BEGIN SSU EDITS - Far Horizons limb damage
+        SubscribeLocalEvent<BodyComponent, LimbHitCheckEvent>(RefRelayBodyEvent);
+        SubscribeLocalEvent<BodyComponent, LimbScatterHitTargetCheckEvent>(RefRelayBodyEvent);
+        SubscribeLocalEvent<BodyComponent, RejuvenateEvent>(RelayBodyEvent);
+        // END SSU EDITS
     }
 
     private void RefRelayBodyEvent<T>(EntityUid uid, BodyComponent component, ref T args) where T : struct

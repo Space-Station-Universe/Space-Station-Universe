@@ -4,6 +4,14 @@
   name: winter coat
   description: A heavy jacket made from 'synthetic' animal furs.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
   - type: Clothing
@@ -68,6 +76,14 @@
   id: ClothingOuterWinterBar
   name: bartender winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -91,6 +107,14 @@
   id: ClothingOuterWinterCap
   name: captain's winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -205,6 +229,14 @@
   id: ClothingOuterWinterChem
   name: chemistry winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -235,6 +267,14 @@
   id: ClothingOuterWinterCMO
   name: chief medical officer's winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -298,6 +338,14 @@
   id: ClothingOuterWinterGen
   name: genetics winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -419,6 +467,14 @@
   id: ClothingOuterWinterJani
   name: janitorial winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -449,6 +505,14 @@
   id: ClothingOuterWinterMed
   name: medical winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -525,6 +589,14 @@
   id: ClothingOuterWinterPara
   name: paramedic winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -579,6 +651,14 @@
   id: ClothingOuterWinterRD
   name: research director's winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -633,6 +713,14 @@
   id: ClothingOuterWinterSci
   name: science winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -663,6 +751,14 @@
   id: ClothingOuterWinterSec
   name: security winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:
@@ -686,6 +782,14 @@
   id: ClothingOuterWinterViro
   name: virology winter coat
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     layers:

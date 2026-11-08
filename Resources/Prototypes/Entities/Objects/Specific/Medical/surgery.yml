@@ -5,6 +5,9 @@
   id: BaseToolSurgery
   abstract: true
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
   - type: StaticPrice
     price: 20
@@ -20,6 +23,14 @@
   parent: BaseToolSurgery
   description: A surgical tool used to cauterize open wounds.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Cautery
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/cautery1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/cautery2.ogg
+  # END SSU EDITS
   - type: Sprite
     sprite: Objects/Specific/Medical/Surgery/cautery.rsi
     state: cautery
@@ -41,6 +52,12 @@
   parent: BaseToolSurgery
   description: A surgical drill for making holes into hard material.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: SurgicalDrill
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/saw.ogg
+  # END SSU EDITS
   - type: Sprite
     sprite: Objects/Specific/Medical/Surgery/drill.rsi
     state: drill
@@ -66,6 +83,14 @@
   parent: BaseToolSurgery
   description: A surgical tool used to make incisions into flesh.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Scalpel
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Tool
     qualities:
     - Slicing
@@ -95,6 +120,15 @@
   parent: Scalpel
   description: A pointy piece of glass, abraded to an edge and wrapped in tape for a handle. # Could become a decent tool or weapon with right tool mods.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Scalpel
+    speed: 1.4
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  # END SSU EDITS
   - type: Sprite
     state: shiv
   - type: Item
@@ -117,6 +151,15 @@
   parent: Scalpel
   description: Made of more expensive materials, sharper and generally more reliable.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Scalpel
+    speed: 0.6
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  # END SSU EDITS
   - type: Sprite
     state: advanced
   - type: Item
@@ -132,6 +175,21 @@
   parent: Scalpel
   description: A scalpel which uses a directed laser to slice instead of a blade, for more precise surgery while also cauterizing as it cuts.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Hemostat
+    speed: 0.3
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  - type: Cautery
+    speed: 0.3
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
     state: laser
   - type: Item
@@ -145,6 +203,14 @@
   parent: BaseToolSurgery
   description: A surgical tool used to hold open incisions.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Retractor
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/retractor1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/retractor2.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
     sprite: Objects/Specific/Medical/Surgery/scissors.rsi
     state: retractor
@@ -155,12 +221,21 @@
 - type: entity
   name: hemostat
   id: Hemostat
-  parent: Retractor
+  # parent: Retractor # SSU: inheriting Retractor made the hemostat count as a retractor in surgery
+  parent: BaseToolSurgery
   description: A surgical tool used to compress blood vessels to prevent bleeding.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Hemostat
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/hemostat1.ogg
+  # END SSU EDITS
   - type: Sprite
+    sprite: Objects/Specific/Medical/Surgery/scissors.rsi # SSU: came from Retractor
     state: hemostat
   - type: Item
+    sprite: Objects/Specific/Medical/Surgery/scissors.rsi # SSU: came from Retractor
     heldPrefix: hemostat
     storedRotation: 90
 
@@ -170,6 +245,27 @@
   #   parent: Retractor
   #   description: A surgical tool used for setting bones.
   #   components:
+
+# BEGIN SSU EDITS - Far Horizons/Starlight surgery, bone setter for the bone steps
+- type: entity
+  name: bone setter
+  id: BoneSetter
+  parent: BaseToolSurgery
+  description: A surgical tool used for setting bones.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/Surgery/scissors.rsi
+    state: setter
+  - type: Item
+    sprite: Objects/Specific/Medical/Surgery/scissors.rsi
+    heldPrefix: setter
+    storedRotation: 90
+  - type: BoneSetter
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/bone_setter.ogg
+  - type: SurgeryTool
+# END SSU EDITS
+
 # Saws
 
 - type: entity
@@ -178,6 +274,12 @@
   parent: BaseToolSurgery
   description: For cutting wood and other objects to pieces. Or sawing bones, in case of emergency.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: BoneSaw
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/bone_saw.ogg
+  # END SSU EDITS
   - type: Utensil
     types:
       - Knife
@@ -200,6 +302,13 @@
   parent: Saw
   description: A wicked serrated blade made of whatever nasty sharp things you could find. # It would make a pretty decent weapon, given there are more space for some tool mods too.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: BoneSaw
+    speed: 0.8
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/bone_saw.ogg
+  # END SSU EDITS
   - type: Sprite
     state: improv
   - type: Item
@@ -220,6 +329,15 @@
   parent: Saw
   description: For heavy duty cutting.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: BoneSaw
+    speed: 0.5
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/saw.ogg
+    endSound:
+      path: /Audio/Items/drill_hit.ogg
+  # END SSU EDITS
   - type: Sprite
     state: electric
   - type: Item
@@ -239,6 +357,15 @@
   parent: [ SawElectric, BaseSyndicateContraband ]
   description: Interdyne's state-of-the-art surgical saw. Guaranteed to stay spotless and sterile, no matter how messy the job.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: BoneSaw
+    speed: 0.2
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/saw.ogg
+    endSound:
+      path: /Audio/Items/drill_hit.ogg
+  # END SSU EDITS
   - type: Sprite
     state: advanced
   - type: Item

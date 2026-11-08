@@ -1,3 +1,4 @@
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 using Content.Shared.Damage.Components;
 using Content.Shared.Mobs.Components;
 using Robust.Shared.Timing;
@@ -8,6 +9,7 @@ public sealed partial class PassiveDamageSystem : EntitySystem
 {
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     #region Subscriptions
 
@@ -57,7 +59,10 @@ public sealed partial class PassiveDamageSystem : EntitySystem
             foreach (var allowedState in comp.AllowedStates)
             {
                 if(allowedState == mobState.CurrentState)
+                {
                     _damageable.ChangeDamage((uid, damage), comp.Damage, true, false);
+                    _limbDamage.ChangeDamageAll(uid, comp.Damage, true, false); // SSU: Far Horizons limb damage
+                }
             }
         }
     }

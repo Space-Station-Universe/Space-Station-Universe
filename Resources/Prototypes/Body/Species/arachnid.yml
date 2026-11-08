@@ -74,6 +74,11 @@
   id: MobArachnid
   name: Urist McWebs
   components:
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: LimbDamageable
+    proto: LimbTargetArachnid
+  # END SSU EDITS
   - type: Respirator
     damage:
       types:
@@ -191,16 +196,28 @@
   parent: [ OrganBaseTorso, OrganArachnidExternal ]
   id: OrganArachnidTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganArachnidExternal ]
+  id: DamageableLimbVisualsArachnid
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#162581"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsArachnid, OrganBaseHead, OrganArachnidExternal ] # SSU: Far Horizons limb damage
   id: OrganArachnidHead
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganArachnidExternal ]
+  parent: [ DamageableLimbVisualsArachnid, OrganBaseArmLeft, OrganArachnidExternal ] # SSU: Far Horizons limb damage
   id: OrganArachnidArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganArachnidExternal ]
+  parent: [ DamageableLimbVisualsArachnid, OrganBaseArmRight, OrganArachnidExternal ] # SSU: Far Horizons limb damage
   id: OrganArachnidArmRight
 
 - type: entity
@@ -212,11 +229,11 @@
   id: OrganArachnidHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganArachnidExternal ]
+  parent: [ DamageableLimbVisualsArachnid, OrganBaseLegLeft, OrganArachnidExternal ] # SSU: Far Horizons limb damage
   id: OrganArachnidLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganArachnidExternal ]
+  parent: [ DamageableLimbVisualsArachnid, OrganBaseLegRight, OrganArachnidExternal ] # SSU: Far Horizons limb damage
   id: OrganArachnidLegRight
 
 - type: entity

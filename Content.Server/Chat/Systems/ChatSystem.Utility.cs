@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Text;
+using Content.Server._SSU.Chat; // SSU: language hook
 using Content.Shared.Chat;
 using Content.Shared.Ghost.Components;
 using Content.Shared.Players;
+using Content.Shared.Speech; // SSU: language hook
 using Content.Shared.Speech.Prototypes;
 using Robust.Shared.Console;
 using Robust.Shared.Network;
@@ -64,7 +66,7 @@ public sealed partial class ChatSystem
     /// <summary>
     ///     Sends a chat message to the given players in range of the source entity.
     /// </summary>
-    private void SendInVoiceRange(ChatChannel channel, string message, string wrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null)
+    private void SendInVoiceRange(ChatChannel channel, string message, string wrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null, string? name = null, SpeechVerbPrototype? speech = null) // SSU: name/speech for the language hook
     {
         foreach (var (session, data) in GetRecipients(source, VoiceRange))
         {
@@ -72,7 +74,20 @@ public sealed partial class ChatSystem
             if (entRange == MessageRangeCheckResult.Disallowed)
                 continue;
             var entHideChat = entRange == MessageRangeCheckResult.HideChat;
-            _chatManager.ChatMessageToOne(channel, message, wrappedMessage, source, entHideChat, session.Channel, author: author);
+
+            // BEGIN SSU EDITS - Language hook, per-listener message
+            var listenerMessage = message;
+            var listenerWrapped = wrappedMessage;
+            if (session.AttachedEntity is { Valid: true } listener)
+            {
+                var listenerEv = new InGameICMessageListenerEvent(source, listener, channel, name, speech, message, wrappedMessage);
+                RaiseLocalEvent(ref listenerEv);
+                listenerMessage = listenerEv.Message;
+                listenerWrapped = listenerEv.WrappedMessage;
+            }
+            // END SSU EDITS
+
+            _chatManager.ChatMessageToOne(channel, listenerMessage, listenerWrapped, source, entHideChat, session.Channel, author: author); // SSU: per-listener message
         }
 
         _replay.RecordServerMessage(new ChatMessage(channel, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));

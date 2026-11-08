@@ -1,0 +1,46 @@
+using Content.Shared._FarHorizons.LimbDamage.Components;
+using Content.Shared.Body;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Systems;
+using Content.Shared.Examine;
+using Content.Shared.Tag;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Network; // SSU: limb effects run on the server only
+using Robust.Shared.Timing;
+
+namespace Content.Shared._FarHorizons.LimbDamage;
+
+public sealed partial class LimbDamageSystem : EntitySystem
+{
+    [Dependency] private DamageableSystem _damageable = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IPrototypeManager _protoMan = default!;
+    [Dependency] private ExamineSystemShared _examine = default!;
+    [Dependency] private TagSystem _tag = default!;
+    [Dependency] private OrganRelationSystem _organRelation = default!; // SSU: upstream child organs
+    [Dependency] private INetManager _net = default!; // SSU: limb effects run on the server only
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        InitHitChance();
+        InitDamage();
+        InitArmor();
+        InitEffect();
+        InitInspect();
+        InitThrowable();
+
+        SubscribeLocalEvent<LimbDamageableComponent, ComponentInit>(OnBodyInit);
+        SubscribeLocalEvent<DamageableLimbComponent, ComponentInit>(OnLimbInit);
+    }
+
+    private void OnBodyInit(Entity<LimbDamageableComponent> ent, ref ComponentInit args) =>
+        ent.Comp.Body = EnsureComp<BodyComponent>(ent);
+
+    private void OnLimbInit(Entity<DamageableLimbComponent> ent, ref ComponentInit args)
+    {
+        ent.Comp.Damageable = EnsureComp<DamageableComponent>(ent);
+        ent.Comp.Organ = EnsureComp<OrganComponent>(ent);
+    }
+}

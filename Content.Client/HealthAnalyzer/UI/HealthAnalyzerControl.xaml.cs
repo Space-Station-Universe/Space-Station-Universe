@@ -1,6 +1,9 @@
 using System.Linq;
 using System.Numerics;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
+using Content.Shared._FarHorizons.LimbDamage.Components; // ditto
 using Content.Shared.Atmos;
+using Content.Shared.Body; // SSU: Far Horizons limb damage
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
@@ -32,6 +35,14 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
     private readonly DamageableSystem _damageable;
     private readonly SpriteSystem _spriteSystem;
 
+    // BEGIN SSU EDITS - Far Horizons limb damage
+    private readonly LimbDamageSystem _limbDamage;
+    private static readonly ProtoId<OrganCategoryPrototype> DefaultLimb = "Torso";
+    private static readonly ProtoId<LimbTargettingPrototype> DefaultLimbVisuals = "LimbTargetHuman";
+    private ProtoId<OrganCategoryPrototype> _currTarget = DefaultLimb;
+    private EntityUid? _targetEnt;
+    // END SSU EDITS
+
     public HealthAnalyzerControl()
     {
         RobustXamlLoader.Load(this);
@@ -42,6 +53,9 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
         _prototypes = dependencies.Resolve<IPrototypeManager>();
         _spriteSystem = _entityManager.System<SpriteSystem>();
         _damageable = _entityManager.System<DamageableSystem>();
+
+        _limbDamage = _entityManager.System<LimbDamageSystem>(); // SSU: Far Horizons limb damage
+        LimbTargettingDisplay.OnSelectedLimb += SetLimbTarget; // ditto
     }
 
     /// <summary>
@@ -77,6 +91,7 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
             ScanModeLabel.Text = Loc.GetString("health-analyzer-window-scan-mode-inactive");
             ScanModeLabel.FontColorOverride = Color.Red;
             SpriteView.Visible = false;
+            LimbTargettingDisplay.Visible = false; // SSU: Far Horizons limb damage
             NoDataTex.Visible = true;
             return;
         }
@@ -93,6 +108,22 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
         SpriteView.SetEntity(target.Value);
         SpriteView.Visible = scanMode;
         NoDataTex.Visible = !SpriteView.Visible;
+
+        // BEGIN SSU EDITS - Far Horizons limb damage, show the limb doll instead of the sprite
+        if (target != _targetEnt)
+            _currTarget = DefaultLimb;
+        _targetEnt = target;
+
+        var hasLimbs = _entityManager.TryGetComponent<LimbDamageableComponent>(target.Value, out var limbDamageable);
+        LimbTargettingDisplay.Visible = scanMode && hasLimbs;
+        if (hasLimbs)
+        {
+            SpriteView.Visible = false;
+            LimbTargettingDisplay.InitTarget(_prototypes, _cache, _spriteSystem,
+                _prototypes.HasIndex(limbDamageable!.Proto) ? limbDamageable.Proto : DefaultLimbVisuals);
+            LimbTargettingDisplay.UpdateLimb(_currTarget);
+        }
+        // END SSU EDITS
 
         var name = new FormattedMessage();
         name.PushColor(Color.White);
@@ -127,6 +158,7 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
 
         // Total Damage
         DamageLabel.Text = _damageable.GetTotalDamage(target.Value).ToString();
+        SetBodyLabelsVisible(true); // SSU: Far Horizons limb damage
 
         // Alerts
         var showAlerts = unrevivable || bleeding;
@@ -155,6 +187,10 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
                 MaxWidth = 300,
             });
         }
+
+        // SSU: Far Horizons limb damage, per limb damage replaces the body totals below
+        if (hasLimbs && Repopulate())
+            return;
 
         // Damage Groups
         var damageSortedGroups =
@@ -236,6 +272,59 @@ public sealed partial class HealthAnalyzerControl : BoxContainer
             }
         }
     }
+
+    // BEGIN SSU EDITS - Far Horizons limb damage
+    private void SetLimbTarget(ProtoId<OrganCategoryPrototype> target)
+    {
+        _currTarget = target;
+        LimbTargettingDisplay.UpdateLimb(_currTarget);
+        Repopulate();
+    }
+
+    /// <summary>
+    /// Shows the damage of the selected limb. Returns false if the target has no limb damage to show.
+    /// </summary>
+    private bool Repopulate()
+    {
+        if (_targetEnt == null || _entityManager.Deleted(_targetEnt))
+            return false;
+
+        var fullBodyDamage = _limbDamage.TryGetFullBodyDamage(_targetEnt.Value);
+        var fullBodyDamageGroups = _limbDamage.TryGetFullBodyDamageGroups(_targetEnt.Value);
+
+        if (fullBodyDamage == null || fullBodyDamageGroups == null)
+            return false;
+
+        if (!fullBodyDamage.ContainsKey(_currTarget))
+        {
+            _currTarget = DefaultLimb;
+            LimbTargettingDisplay.UpdateLimb(_currTarget);
+        }
+
+        LimbTargettingDisplay.SetHealth(fullBodyDamage.ToDictionary(p => p.Key, p => p.Value.Sum(e => (float)e.Value)));
+
+        DamageLabel.Text = fullBodyDamage[_currTarget].Select(p => (float)p.Value).Sum().ToString();
+
+        var sortedGroups = fullBodyDamageGroups[_currTarget]
+            .OrderByDescending(g => g.Value)
+            .ToDictionary(g => g.Key, g => g.Value);
+
+        DrawDiagnosticGroups(sortedGroups, fullBodyDamage[_currTarget]);
+
+        SetBodyLabelsVisible(_currTarget == DefaultLimb);
+        return true;
+    }
+
+    private void SetBodyLabelsVisible(bool visible)
+    {
+        StatusText.Visible = visible;
+        StatusLabel.Visible = visible;
+        TemperatureText.Visible = visible;
+        TemperatureLabel.Visible = visible;
+        BloodText.Visible = visible;
+        BloodLabel.Visible = visible;
+    }
+    // END SSU EDITS
 
     private Texture GetTexture(string texture)
     {

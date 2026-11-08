@@ -1,32 +1,42 @@
 - type: organCategory
   id: Torso
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: Head
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: ArmLeft
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: ArmRight
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: HandRight
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: HandLeft
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: LegLeft
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: LegRight
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: FootLeft
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: FootRight
+  surgeryTargetable: true # SSU: Far Horizons surgery
 
 - type: organCategory
   id: Brain

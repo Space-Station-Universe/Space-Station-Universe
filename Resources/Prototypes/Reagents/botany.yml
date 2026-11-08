@@ -173,6 +173,15 @@
           - !type:ReagentCondition
             reagent: RobustHarvest
             min: 80
+      # BEGIN SSU EDITS - Far Horizons body extensions, regrows Diona limbs
+      - !type:RegenerateLimbs
+        conditions:
+          - !type:MetabolizerTypeCondition
+            type: [Plant]
+          - !type:ReagentCondition
+            reagent: RobustHarvest
+            min: 15
+      # END SSU EDITS
 
 - type: reagent
   id: Sedin

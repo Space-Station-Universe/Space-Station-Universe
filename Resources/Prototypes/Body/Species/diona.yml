@@ -72,6 +72,12 @@
   id: MobDiona
   name: Urist McPlants
   components:
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: RegrowableLimbs
+  - type: LimbDamageable
+    proto: LimbTargetDiona
+  # END SSU EDITS
   - type: Respirator
     damage:
       types:
@@ -214,16 +220,28 @@
   parent: [ OrganBaseTorso, OrganDionaExternal ]
   id: OrganDionaTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganDionaExternal ]
+  id: DamageableLimbVisualsDiona
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#cd7314"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsDiona, LimbDamageHeadNonVital, OrganBaseHead, OrganDionaExternal ] # SSU: Far Horizons limb damage
   id: OrganDionaHead
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganDionaExternal ]
+  parent: [ DamageableLimbVisualsDiona, OrganBaseArmLeft, OrganDionaExternal ] # SSU: Far Horizons limb damage
   id: OrganDionaArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganDionaExternal ]
+  parent: [ DamageableLimbVisualsDiona, OrganBaseArmRight, OrganDionaExternal ] # SSU: Far Horizons limb damage
   id: OrganDionaArmRight
 
 - type: entity
@@ -235,11 +253,11 @@
   id: OrganDionaHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganDionaExternal ]
+  parent: [ DamageableLimbVisualsDiona, OrganBaseLegLeft, OrganDionaExternal ] # SSU: Far Horizons limb damage
   id: OrganDionaLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganDionaExternal ]
+  parent: [ DamageableLimbVisualsDiona, OrganBaseLegRight, OrganDionaExternal ] # SSU: Far Horizons limb damage
   id: OrganDionaLegRight
 
 - type: entity

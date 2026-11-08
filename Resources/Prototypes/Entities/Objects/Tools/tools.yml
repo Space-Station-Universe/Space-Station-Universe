@@ -4,6 +4,15 @@
   id: Wirecutter
   description: This kills the wire.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Hemostat
+    speed: 2.3 #FarHorizons
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/wirecutter_drop.ogg
@@ -51,6 +60,13 @@
   id: Screwdriver
   description: Industrial grade torque in a small screwdriving package.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgicalDrill
+    speed: 2.6 
+    endSound:
+      path: /Audio/Weapons/smash.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/screwdriver_drop.ogg
@@ -95,6 +111,9 @@
   id: Wrench
   description: 'A common tool for assembly and disassembly. Remember: lefty latchy, righty removey.'
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/wrench_drop.ogg
@@ -137,6 +156,9 @@
   id: Multitool
   description: An advanced tool to copy, store, and send electrical pulses and signals through wires and machines.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/multitool_drop.ogg
@@ -244,6 +266,13 @@
   id: PowerDrill
   description: A simple powered hand drill.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgicalDrill 
+    speed: 1.8 
+    startSound:
+      path: /Audio/Items/drill_use.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Tag
     tags:
     - Powerdrill

@@ -163,6 +163,11 @@
   id: MobVox
   name: Urist McVox
   components:
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: LimbDamageable
+    proto: LimbTargetVox
+  # END SSU EDITS
   - type: Damageable
     damageModifierSet: Vox
   - type: Speech
@@ -277,8 +282,20 @@
     hideableLayers:
     - enum.HumanoidVisualLayers.Tail
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganVoxExternal ]
+  id: DamageableLimbVisualsVox
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#7a8bf2"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsVox, OrganBaseHead, OrganVoxExternal ] # SSU: Far Horizons limb damage
   id: OrganVoxHead
   components:
   - type: VisualOrganMarkings
@@ -297,11 +314,11 @@
             state: hair
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganVoxExternal ]
+  parent: [ DamageableLimbVisualsVox, OrganBaseArmLeft, OrganVoxExternal ] # SSU: Far Horizons limb damage
   id: OrganVoxArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganVoxExternal ]
+  parent: [ DamageableLimbVisualsVox, OrganBaseArmRight, OrganVoxExternal ] # SSU: Far Horizons limb damage
   id: OrganVoxArmRight
 
 - type: entity
@@ -313,11 +330,11 @@
   id: OrganVoxHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganVoxExternal ]
+  parent: [ DamageableLimbVisualsVox, OrganBaseLegLeft, OrganVoxExternal ] # SSU: Far Horizons limb damage
   id: OrganVoxLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganVoxExternal ]
+  parent: [ DamageableLimbVisualsVox, OrganBaseLegRight, OrganVoxExternal ] # SSU: Far Horizons limb damage
   id: OrganVoxLegRight
 
 - type: entity

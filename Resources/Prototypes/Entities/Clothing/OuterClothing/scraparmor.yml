@@ -56,6 +56,14 @@
   name: scrap armor
   description: A tider's gleaming plate mail. Bail up, or you're a dead man.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      LegRight: {}
+      LegLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/OuterClothing/Armor/scrap_armor.rsi
   - type: Item

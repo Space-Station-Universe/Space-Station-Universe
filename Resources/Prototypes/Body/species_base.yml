@@ -21,11 +21,13 @@
     thresholds: [ 10, 20, 30, 50, 70, 100 ]
     targetLayers:
     - "enum.HumanoidVisualLayers.Chest"
-    - "enum.HumanoidVisualLayers.Head"
-    - "enum.HumanoidVisualLayers.LArm"
-    - "enum.HumanoidVisualLayers.LLeg"
-    - "enum.HumanoidVisualLayers.RArm"
-    - "enum.HumanoidVisualLayers.RLeg"
+    # BEGIN SSU EDITS - Far Horizons limb damage, limbs draw their own damage overlays (LimbDamageVisuals)
+    # - "enum.HumanoidVisualLayers.Head"
+    # - "enum.HumanoidVisualLayers.LArm"
+    # - "enum.HumanoidVisualLayers.LLeg"
+    # - "enum.HumanoidVisualLayers.RArm"
+    # - "enum.HumanoidVisualLayers.RLeg"
+    # END SSU EDITS
     damageOverlayGroups:
       Brute:
         sprite: Mobs/Effects/brute_damage.rsi
@@ -95,6 +97,7 @@
   - type: Buckle
   - type: CombatMode
     canDisarm: true
+  - type: LimbTargetting # SSU: Far Horizons limb damage
   - type: MeleeWeapon
     soundHit:
       collection: Punch
@@ -134,6 +137,8 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+      enum.SurgeryUIKey.Key: # SSU: Far Horizons surgery
+        type: SurgeryBui
   - type: Puller
   - type: Speech
     speechSounds: Alto
@@ -171,6 +176,17 @@
   id: BaseSpeciesMobOrganicNoCrawl
   save: false
   components:
+  # BEGIN SSU EDITS - Far Horizons limb damage
+  - type: LimbDamageable
+    proto: LimbTargetHuman
+  - type: NeedsOrgansForInventorySlots # Far Horizons body extensions
+    slots:
+      - head
+      - ears
+      - mask
+      - gloves
+      - shoes
+  # END SSU EDITS
   - type: Satiation
     satiations:
       Hunger:

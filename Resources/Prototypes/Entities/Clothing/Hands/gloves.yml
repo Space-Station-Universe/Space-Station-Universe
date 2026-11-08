@@ -155,6 +155,12 @@
   name: papercut-proof gloves
   description: Perfect for dealing with paperwork and matters with bureaucracy.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      HandRight: {}
+      HandLeft: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Hands/Gloves/hop.rsi
   - type: Clothing
@@ -307,6 +313,20 @@
   name: combat gloves
   description: These tactical gloves are fireproof and shock resistant.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      HandRight:
+        coefficients:
+          Blunt: 0.8
+          Slash: 0.7
+          Piercing: 0.7
+      HandLeft:
+        coefficients:
+          Blunt: 0.8
+          Slash: 0.7
+          Piercing: 0.7
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Hands/Gloves/combat.rsi
   - type: Clothing

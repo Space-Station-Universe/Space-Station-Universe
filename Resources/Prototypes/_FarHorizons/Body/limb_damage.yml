@@ -1,0 +1,379 @@
+# Ported from Far Horizons Resources/Prototypes/_FarHorizons/Body/base_organs.yml and the limb parts of
+# Resources/Prototypes/Body/base_organs.yml.
+# SSU: Far Horizons put these straight on the upstream organ bases. Here they are mixins that the upstream organ
+# bases list as a parent, so the upstream entries stay small. Inventory slots, movement and vital organs are
+# body extensions and come in a later port.
+
+- type: entity
+  id: DamageableLimbBaseNoVisuals
+  abstract: true
+  components:
+    - type: Damageable
+    - type: Injurable
+      damageContainer: LimbDamageContainer # Only brute and heat
+    - type: DamageableLimb
+      bodyDamageFactor: 0.4 # 40% of the damage/healing limb takes is transferred to body
+      missChance: 0 # Tried with miss chance originally. Heard less complaints than I thought, but let's try without missing
+      redirectChance: 0.25 # 25% chance if it didn't miss, it hit other part of the body instead
+      redirectTarget: Torso # Which part to redirect attack to
+      scatterHitChance: 0.05 # 5% chance to hit this limb when making indirrect attack without aiming at it
+      aimedTowardsScatterHitChance: 0.1 # 10% chance to hit it when making indirrect attack with it as target
+
+- type: entity
+  parent: DamageableLimbBaseNoVisuals
+  id: DamageableLimbBase
+  abstract: true
+  components:
+    - type: Appearance
+    - type: LimbDamageVisuals
+      thresholds: [ 10, 30, 50, 70]
+      # layer: "enum.HumanoidVisualLayers.Head" - each limb should overwrite this
+      damageOverlayGroups:
+        Brute:
+          rsi: /Textures/Mobs/Effects/brute_damage.rsi
+          color: "#FF0000"
+        Burn:
+          rsi: /Textures/Mobs/Effects/burn_damage.rsi
+
+# Head
+
+- type: entity
+  parent: DamageableLimbBase
+  id: LimbDamageHeadNonVital
+  abstract: true
+  components:
+  - type: OrganWithInventorySlots
+    slots:
+      - head
+      - mask
+      - ears
+  - type: DamageableLimb
+    bodyDamageFactor: 0.4 # Non vital variant is used for diona and slime, same 40% as legs/arms
+    missChance: 0 # Still 0
+    redirectChance: 0.4 # 40% chance to hit torso
+    scatterHitChance: 0 # Disable chance to miss head without aiming
+    aimedTowardsScatterHitChance: 0
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 150 # Since taking someone's head off = killing, it shouldn't be faster to do that
+      - effect: !type:LimbEffectDestroy
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 250 # Gib lite
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 1500 # Just in case there's laser gatling I don't know of in maints locker
+  - type: LimbDamageVisuals
+    layer: "enum.HumanoidVisualLayers.Head"
+
+- type: entity
+  parent: LimbDamageHeadNonVital
+  id: LimbDamageHead
+  abstract: true
+  components:
+  - type: VitalOrgan
+  - type: DamageableLimb
+    bodyDamageFactor: 1.0 # 100% damage transfer for vital heads
+    missChance: 0
+    redirectChance: 0.4
+    scatterHitChance: 0
+    aimedTowardsScatterHitChance: 0
+
+# Arms
+
+- type: entity
+  parent: DamageableLimbBase
+  id: LimbDamageArmLeft
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    layer: "enum.HumanoidVisualLayers.LArm"
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach # Amputate limb when it takes slash damage
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 100
+      - effect: !type:LimbEffectDestroy # Gib limb. If it has organs (head), it will drop them
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 500
+      - effect: !type:LimbEffectDisarm # Drop items each time hand takes damage when above treshold
+          handId: left
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+
+- type: entity
+  parent: DamageableLimbBase
+  id: LimbDamageArmRight
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    layer: "enum.HumanoidVisualLayers.RArm"
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach # Amputate limb when it takes slash damage
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 100
+      - effect: !type:LimbEffectDestroy # Gib limb. If it has organs (head), it will drop them
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 500
+      - effect: !type:LimbEffectDisarm # Drop items each time hand takes damage when above treshold
+          handId: right
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+
+# Hands
+
+- type: entity
+  parent: DamageableLimbBaseNoVisuals
+  id: LimbDamageHandLeft
+  abstract: true
+  components:
+  - type: OrganWithInventorySlots
+    slots: [ gloves ]
+  - type: DamageableLimb
+    bodyDamageFactor: 0.2
+    missChance: 0
+    redirectChance: 0.4
+    redirectTarget: ArmLeft
+    scatterHitChance: 0.02
+    aimedTowardsScatterHitChance: 0.05
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 50
+      - effect: !type:LimbEffectDestroy
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 300
+      - effect: !type:LimbEffectDisarm # Drop items each time hand takes damage when above treshold
+          handId: left
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 50
+
+- type: entity
+  parent: DamageableLimbBaseNoVisuals
+  id: LimbDamageHandRight
+  abstract: true
+  components:
+  - type: OrganWithInventorySlots
+    slots: [ gloves ]
+  - type: DamageableLimb
+    bodyDamageFactor: 0.2
+    missChance: 0
+    redirectChance: 0.4
+    redirectTarget: ArmRight
+    scatterHitChance: 0.02
+    aimedTowardsScatterHitChance: 0.05
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 50
+      - effect: !type:LimbEffectDestroy
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 300
+      - effect: !type:LimbEffectDisarm # Drop items each time hand takes damage when above treshold
+          handId: right
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 50
+
+# Legs
+
+- type: entity
+  parent: DamageableLimbBase
+  id: LimbDamageLegLeft
+  abstract: true
+  components:
+  - type: MovementOrgan
+  - type: LimbDamageVisuals
+    layer: "enum.HumanoidVisualLayers.LLeg"
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach # Amputate limb when it takes slash damage
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 100
+      - effect: !type:LimbEffectDestroy # Gib limb. If it has organs (head), it will drop them
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 500
+      - effect: !type:LimbEffectKnockdown # Knockdown
+          knockdownTime: 0.25
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+
+- type: entity
+  parent: DamageableLimbBase
+  id: LimbDamageLegRight
+  abstract: true
+  components:
+  - type: MovementOrgan
+  - type: LimbDamageVisuals
+    layer: "enum.HumanoidVisualLayers.RLeg"
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach # Amputate limb when it takes slash damage
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 100
+      - effect: !type:LimbEffectDestroy # Gib limb. If it has organs (head), it will drop them
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 500
+      - effect: !type:LimbEffectKnockdown # Knockdown
+          knockdownTime: 0.25
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 250
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+
+# Feet
+
+- type: entity
+  parent: DamageableLimbBaseNoVisuals
+  id: LimbDamageFootLeft
+  abstract: true
+  components:
+  - type: OrganWithInventorySlots
+    slots: [ shoes ]
+  - type: DamageableLimb
+    bodyDamageFactor: 0.2
+    missChance: 0
+    redirectChance: 0.4
+    redirectTarget: LegLeft
+    scatterHitChance: 0.02
+    aimedTowardsScatterHitChance: 0.05
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 50
+      - effect: !type:LimbEffectDestroy
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 300
+      - effect: !type:LimbEffectKnockdown # Knockdown
+          knockdownTime: 0.5
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 50
+
+- type: entity
+  parent: DamageableLimbBaseNoVisuals
+  id: LimbDamageFootRight
+  abstract: true
+  components:
+  - type: OrganWithInventorySlots
+    slots: [ shoes ]
+  - type: DamageableLimb
+    bodyDamageFactor: 0.2
+    missChance: 0
+    redirectChance: 0.4
+    redirectTarget: LegRight # SSU: Far Horizons had LegLeft here
+    scatterHitChance: 0.02
+    aimedTowardsScatterHitChance: 0.05
+  - type: LimbDamageEffect
+    effects:
+      - effect: !type:LimbEffectDetach
+        condition: !type:LimbConditionSpecificDamage
+          damageType: Slash
+          damageAmount: 50
+      - effect: !type:LimbEffectDestroy
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Heat
+              damageAmount: 300
+      - effect: !type:LimbEffectKnockdown # Knockdown
+          knockdownTime: 0.5
+        condition: !type:LimbConditionOr
+          conditions:
+            - !type:LimbConditionTotalDamage
+              totalDamage: 150
+            - !type:LimbConditionSpecificDamage
+              damageType: Blunt
+              damageAmount: 50

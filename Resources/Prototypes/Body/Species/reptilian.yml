@@ -118,6 +118,11 @@
   id: MobReptilian
   name: Urist McScales
   components:
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: LimbDamageable
+    proto: LimbTargetReptilian
+  # END SSU EDITS
   - type: Puller
     needsHands: false
   - type: Butcherable

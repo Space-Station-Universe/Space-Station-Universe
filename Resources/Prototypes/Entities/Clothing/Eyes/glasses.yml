@@ -227,6 +227,11 @@
   name: optical thermal scanner
   description: Thermals in the shape of glasses.
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head: {}
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Eyes/Glasses/thermal.rsi
   - type: Clothing

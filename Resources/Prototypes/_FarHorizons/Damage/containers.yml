@@ -1,0 +1,6 @@
+# Ported from Far Horizons Resources/Prototypes/_FarHorizons/Damage/containers.yml, limb container only.
+- type: damageContainer
+  id: LimbDamageContainer
+  supportedGroups:
+  - Brute
+  - Burn

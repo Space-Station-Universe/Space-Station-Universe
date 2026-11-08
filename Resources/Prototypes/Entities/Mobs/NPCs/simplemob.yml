@@ -29,6 +29,12 @@
     - DoorBumpOpener
     - StunImmune
   - type: Blindable
+  # BEGIN SSU EDITS - Far Horizons surgery
+  - type: UserInterface
+    interfaces:
+      enum.SurgeryUIKey.Key:
+        type: SurgeryBui
+  # END SSU EDITS
 
 - type: entity
   abstract: true

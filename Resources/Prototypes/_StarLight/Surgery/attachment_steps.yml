@@ -1,0 +1,53 @@
+﻿- type: entity
+  parent: SurgeryStepBase
+  id: SurgeryStepRejoinNerves
+  name: Rejoin Nerves
+  components:
+  - type: SurgeryStep
+    duration: 5
+    tools:
+    - type: Hemostat
+  - type: Sprite
+    sprite: _Starlight/Objects/Specific/Medical/scissors.rsi
+    state: hemostat
+  - type: SurgeryStepEmoteEffect
+  #FarHorizons Start
+  - type: OnFailDamage
+    damage: 
+      types:
+        Piercing: 10
+  #FarHorizons End
+
+- type: entity
+  parent: SurgeryStepBase
+  id: SurgeryStepRejoinBloodVessels
+  name: Rejoin Blood Vessels
+  components:
+  - type: SurgeryStep
+    duration: 5
+    tools:
+    - type: Hemostat
+  - type: Sprite
+    sprite: _Starlight/Objects/Specific/Medical/scissors.rsi
+    state: hemostat
+  #FarHorizons Start
+  - type: OnFailDamage
+    damage: 
+      types:
+        Piercing: 10
+  #FarHorizons End
+
+- type: entity
+  parent: SurgeryStepBase
+  id: SurgeryStepRestoreCartilage
+  name: Restore Cartilage
+  components:
+  - type: SurgeryStep
+    duration: 4
+    tools:
+    - type: BoneGel
+    reagentId: BoneGel
+    reagentQuantity: 5
+  - type: Sprite
+    sprite: _Starlight/Objects/Specific/Medical/bone_gel.rsi # SSU: Starlight sprite kept in the _Starlight textures folder
+    state: bone-gel

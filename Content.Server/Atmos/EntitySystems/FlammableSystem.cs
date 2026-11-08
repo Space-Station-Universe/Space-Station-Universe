@@ -29,6 +29,7 @@ using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -50,6 +51,7 @@ namespace Content.Server.Atmos.EntitySystems
         [Dependency] private AudioSystem _audio = default!;
         [Dependency] private IRobustRandom _random = default!;
         [Dependency] private IGameTiming _timing = default!;
+        [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
         [Dependency] private EntityQuery<InventoryComponent> _inventoryQuery = default!;
         [Dependency] private EntityQuery<PhysicsComponent> _physicsQuery = default!;
@@ -57,6 +59,8 @@ namespace Content.Server.Atmos.EntitySystems
         private static readonly TimeSpan UpdateTime = TimeSpan.FromSeconds(1);
 
         private readonly Dictionary<Entity<FlammableComponent>, float> _fireEvents = new();
+
+        private const float LimbDamageMultiplier = 2f; // SSU: Far Horizons limb damage, limbs take this much more than the torso, split randomly between them
 
         private const int FirestackEnergy = 37500; // joules release when on fire
 
@@ -498,6 +502,7 @@ namespace Content.Server.Atmos.EntitySystems
                         _inventory.RelayEvent((uid, inv), ref ev);
 
                     _damageableSystem.TryChangeDamage(uid, flammable.Damage * flammable.FireStacks * ev.Multiplier, interruptsDoAfters: false);
+                    _limbDamage.ChangeDamageRandom(uid, flammable.Damage * flammable.FireStacks * ev.Multiplier * LimbDamageMultiplier, interruptsDoAfters: false); // SSU: Far Horizons limb damage
 
                     AdjustFireStacks(uid, flammable.FirestackFade * (flammable.Resisting ? 15f : 1f), flammable, flammable.OnFire);
                 }

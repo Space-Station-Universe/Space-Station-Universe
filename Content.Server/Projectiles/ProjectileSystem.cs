@@ -2,6 +2,9 @@ using Content.Server.Administration.Logs;
 using Content.Server.Destructible;
 using Content.Server.Effects;
 using Content.Server.Weapons.Ranged.Systems;
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
+using Content.Shared._FarHorizons.LimbDamage.Components; // ditto
+using Content.Shared.Body; // ditto
 using Content.Shared.Camera;
 using Content.Shared.Damage;
 using Content.Shared.Damage.Components;
@@ -9,8 +12,10 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
 using Content.Shared.FixedPoint;
 using Content.Shared.Projectiles;
+using Content.Shared.Weapons.Ranged.Components; // SSU: Far Horizons limb damage
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes; // SSU: Far Horizons limb damage
 
 namespace Content.Server.Projectiles;
 
@@ -22,6 +27,7 @@ public sealed partial class ProjectileSystem : SharedProjectileSystem
     [Dependency] private DestructibleSystem _destructibleSystem = default!;
     [Dependency] private GunSystem _guns = default!;
     [Dependency] private SharedCameraRecoilSystem _sharedCameraRecoil = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     public override void Initialize()
     {
@@ -59,7 +65,24 @@ public sealed partial class ProjectileSystem : SharedProjectileSystem
             damageRequired = FixedPoint2.Max(damageRequired, FixedPoint2.Zero);
         }
 
-        if (_damageableSystem.TryChangeDamage((target, damageableComponent), ev.Damage, out var damage, component.IgnoreResistances, origin: component.Shooter))
+        // BEGIN SSU EDITS - Far Horizons limb damage
+        // Aimed projectiles go for the shooter's targetted limb, others can scatter onto one.
+        var shouldTargetLimb = TryComp<LimbDamageableComponent>(target, out var limbDmgTarget);
+        ProtoId<OrganCategoryPrototype>? limbTarget = null;
+
+        if (TryComp<TargetedProjectileComponent>(uid, out var targeted) &&
+            shouldTargetLimb &&
+            targeted.LimbTarget != null)
+            _limbDamage.CheckAttackHit((target, limbDmgTarget), targeted.LimbTarget.Value, out limbTarget);
+        else if (shouldTargetLimb)
+            limbTarget = _limbDamage.TryScatterHitTarget((target, limbDmgTarget));
+
+        shouldTargetLimb &= limbTarget != null;
+
+        if ((shouldTargetLimb && _limbDamage.TryChangeLimbDamage((target, limbDmgTarget), limbTarget!.Value, ev.Damage, out var damage, component.IgnoreResistances, origin: component.Shooter)) ||
+            _damageableSystem.TryChangeDamage((target, damageableComponent), ev.Damage, out damage, component.IgnoreResistances, origin: component.Shooter))
+        // if (_damageableSystem.TryChangeDamage((target, damageableComponent), ev.Damage, out var damage, component.IgnoreResistances, origin: component.Shooter))
+        // END SSU EDITS
         {
             if (!Deleted(target))
             {

@@ -1,3 +1,4 @@
+using Content.Shared._FarHorizons.LimbDamage.Components; // SSU: Far Horizons limb damage
 using Content.Shared.Armor;
 using Content.Shared.Atmos;
 using Content.Shared.Chat;
@@ -95,6 +96,7 @@ public partial class InventorySystem
         SubscribeLocalEvent<InventoryComponent, GluedEffectAttemptEvent>(RefRelayInventoryEvent);
         SubscribeLocalEvent<InventoryComponent, LubedEffectAttemptEvent>(RefRelayInventoryEvent);
         SubscribeLocalEvent<InventoryComponent, WaypointerChangedEvent>(RefRelayInventoryEvent);
+        SubscribeLocalEvent<InventoryComponent, LimbDamageModifyEvent>(RefRelayInventoryEvent); // SSU: Far Horizons limb damage
 
         // Eye/vision events
         SubscribeLocalEvent<InventoryComponent, CanSeeAttemptEvent>(RelayInventoryEvent);

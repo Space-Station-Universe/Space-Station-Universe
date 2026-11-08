@@ -1,7 +1,9 @@
+using Content.Shared._FarHorizons.LimbDamage; // SSU: Far Horizons limb damage
 using Content.Shared.Administration.Logs;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Damage; // SSU: Far Horizons limb damage
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Database;
@@ -16,6 +18,8 @@ using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Stacks;
 using Robust.Shared.Audio.Systems;
+using Content.Shared.Body; // SSU: Far Horizons limb damage
+using Robust.Shared.Prototypes; // ditto
 
 namespace Content.Shared.Medical.Healing;
 
@@ -31,6 +35,7 @@ public sealed partial class HealingSystem : EntitySystem
     [Dependency] private MobThresholdSystem _mobThresholdSystem = default!;
     [Dependency] private SharedPopupSystem _popupSystem = default!;
     [Dependency] private SharedSolutionContainerSystem _solutionContainerSystem = default!;
+    [Dependency] private LimbDamageSystem _limbDamage = default!; // SSU: Far Horizons limb damage
 
     public override void Initialize()
     {
@@ -80,8 +85,31 @@ public sealed partial class HealingSystem : EntitySystem
         if (healing.ModifyBloodLevel != 0 && bloodstream != null)
             _bloodstreamSystem.TryModifyBloodLevel((target.Owner, bloodstream), healing.ModifyBloodLevel);
 
-        if (!_damageable.TryChangeDamage(target.Owner, healing.Damage * _damageable.UniversalTopicalsHealModifier, out var healed, true, origin: args.Args.User) && healing.BloodlossModifier != 0)
+        // BEGIN SSU EDITS - Far Horizons limb damage, heal the targetted limb first if it has damage
+        bool healingDone;
+        DamageSpecifier healed = new();
+        DamageSpecifier healedLimb = new();
+
+        var healingDoneToLimb = false;
+        if (args.TargettedLimb != null)
+        {
+            healingDoneToLimb = _limbDamage.TryChangeLimbDamage(target.Owner, args.TargettedLimb.Value,
+                healing.Damage * _damageable.UniversalTopicalsHealModifier, out healed, out healedLimb,
+                true, origin: args.Args.User);
+        }
+
+        if (!healingDoneToLimb || healedLimb.Empty)
+            healingDone = _damageable.TryChangeDamage(target.Owner,
+                healing.Damage * _damageable.UniversalTopicalsHealModifier, out healed, true,
+                origin: args.Args.User);
+        else
+            healingDone = healingDoneToLimb;
+
+        if (!healingDone && healing.BloodlossModifier != 0)
             return;
+        // if (!_damageable.TryChangeDamage(target.Owner, healing.Damage * _damageable.UniversalTopicalsHealModifier, out var healed, true, origin: args.Args.User) && healing.BloodlossModifier != 0)
+        //     return;
+        // END SSU EDITS
 
         var total = healed.GetTotal();
 
@@ -112,8 +140,12 @@ public sealed partial class HealingSystem : EntitySystem
 
         _audio.PlayPredicted(healing.HealingEndSound, target.Owner, args.User);
 
+        // BEGIN SSU EDITS - move on to the next damaged limb once the targetted one is healed
+        args.TargettedLimb = PickLimb((args.Used.Value, healing), target, args.TargettedLimb);
+        // END SSU EDITS
+
         // Logic to determine the whether or not to repeat the healing action
-        args.Repeat = HasDamage((args.Used.Value, healing), target) && !dontRepeat;
+        args.Repeat = HasDamage((args.Used.Value, healing), target, args.User) && !dontRepeat; // SSU: Far Horizons limb damage, pass the healer
         args.Handled = true;
 
         if (!args.Repeat)
@@ -127,8 +159,42 @@ public sealed partial class HealingSystem : EntitySystem
             args.Args.Delay = healing.Delay * GetScaledHealingPenalty(target.Owner, healing.SelfHealPenaltyMultiplier);
     }
 
-    private bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target)
+    // BEGIN SSU EDITS - Far Horizons limb damage, keep the limb while damaged, else move on. Null is the body (torso).
+    private ProtoId<OrganCategoryPrototype>? PickLimb(Entity<HealingComponent> healing, Entity<DamageableComponent> target,
+        ProtoId<OrganCategoryPrototype>? current)
     {
+        if (current != null)
+            return _limbDamage.GetDamagedLimb(target.Owner, healing.Comp, current);
+
+        return BodyHasDamage(healing, target) ? null : _limbDamage.GetDamagedLimb(target.Owner, healing.Comp);
+    }
+
+    private bool BodyHasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target)
+    {
+        var damageableDict = _damageable.GetAllDamage(target.AsNullable()).DamageDict;
+        foreach (var type in healing.Comp.Damage.DamageDict)
+        {
+            if (damageableDict.TryGetValue(type.Key, out var amount) && amount > 0)
+                return true;
+        }
+
+        return false;
+    }
+    // END SSU EDITS
+
+    public bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target, EntityUid? origin = null) // SSU: origin for limb damage, public for surgery tend steps
+    {
+        // BEGIN SSU EDITS - Far Horizons limb damage, damage on any limb counts too
+        if (_limbDamage.GetDamagedLimb(target.Owner, healing.Comp) != null)
+            return true;
+        // if (origin != null)
+        // {
+        //     var limbTarget = _limbDamage.GetCurrentValidTarget(target.Owner, origin.Value);
+        //     if (limbTarget != null && _limbDamage.LimbHasDamage(target.Owner, limbTarget.Value, healing.Comp))
+        //         return true;
+        // }
+        // END SSU EDITS
+
         var damageableDict = _damageable.GetAllDamage(target.AsNullable()).DamageDict;
         var healingDict = healing.Comp.Damage.DamageDict;
         foreach (var type in healingDict)
@@ -198,7 +264,7 @@ public sealed partial class HealingSystem : EntitySystem
         if (TryComp<StackComponent>(healing, out var stack) && stack.Count < 1)
             return false;
 
-        if (!HasDamage(healing, target!))
+        if (!HasDamage(healing, target!, user)) // SSU: Far Horizons limb damage, pass the healer
         {
             _popupSystem.PopupEntity(Loc.GetString("medical-item-cant-use", ("item", healing.Owner)), healing, user);
             return false;
@@ -218,8 +284,11 @@ public sealed partial class HealingSystem : EntitySystem
             ? healing.Comp.Delay
             : healing.Comp.Delay * GetScaledHealingPenalty(target, healing.Comp.SelfHealPenaltyMultiplier);
 
+        var limbTarget = _limbDamage.GetCurrentValidTarget(target.Owner, user); // SSU: Far Horizons limb damage
+        limbTarget = PickLimb(healing, target!, limbTarget); // SSU: start somewhere damaged if the targetted limb is already healed
+
         var doAfterEventArgs =
-            new DoAfterArgs(EntityManager, user, delay, new HealingDoAfterEvent(), target, target: target, used: healing)
+            new DoAfterArgs(EntityManager, user, delay, new HealingDoAfterEvent(limbTarget), target, target: target, used: healing) // SSU: pass limbTarget
             {
                 // Didn't break on damage as they may be trying to prevent it and
                 // not being able to heal your own ticking damage would be frustrating.

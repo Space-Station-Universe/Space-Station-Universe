@@ -140,6 +140,11 @@
   id: MobMoth
   name: Urist McFluff
   components:
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: LimbDamageable
+    proto: LimbTargetMoth
+  # END SSU EDITS
   - type: Damageable
     damageModifierSet: Moth
   - type: ZombieAccentOverride
@@ -237,8 +242,20 @@
   parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganMothExternal ]
   id: OrganMothTorso
 
+# BEGIN SSU EDITS - Far Horizons limb damage, limb overlays use the species blood colour
 - type: entity
-  parent: [ OrganBaseHead, OrganMothExternal ]
+  id: DamageableLimbVisualsMoth
+  abstract: true
+  components:
+  - type: LimbDamageVisuals
+    damageOverlayGroups:
+      Brute:
+        rsi: /Textures/Mobs/Effects/brute_damage.rsi
+        color: "#808A51"
+# END SSU EDITS
+
+- type: entity
+  parent: [ DamageableLimbVisualsMoth, OrganBaseHead, OrganMothExternal ] # SSU: Far Horizons limb damage
   id: OrganMothHead
   components:
   - type: VisualOrganMarkings
@@ -246,11 +263,11 @@
     - enum.HumanoidVisualLayers.HeadTop
 
 - type: entity
-  parent: [ OrganBaseArmLeft, OrganMothExternal ]
+  parent: [ DamageableLimbVisualsMoth, OrganBaseArmLeft, OrganMothExternal ] # SSU: Far Horizons limb damage
   id: OrganMothArmLeft
 
 - type: entity
-  parent: [ OrganBaseArmRight, OrganMothExternal ]
+  parent: [ DamageableLimbVisualsMoth, OrganBaseArmRight, OrganMothExternal ] # SSU: Far Horizons limb damage
   id: OrganMothArmRight
 
 - type: entity
@@ -262,11 +279,11 @@
   id: OrganMothHandRight
 
 - type: entity
-  parent: [ OrganBaseLegLeft, OrganMothExternal ]
+  parent: [ DamageableLimbVisualsMoth, OrganBaseLegLeft, OrganMothExternal ] # SSU: Far Horizons limb damage
   id: OrganMothLegLeft
 
 - type: entity
-  parent: [ OrganBaseLegRight, OrganMothExternal ]
+  parent: [ DamageableLimbVisualsMoth, OrganBaseLegRight, OrganMothExternal ] # SSU: Far Horizons limb damage
   id: OrganMothLegRight
 
 - type: entity

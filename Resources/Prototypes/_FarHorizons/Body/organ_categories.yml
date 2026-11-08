@@ -1,0 +1,3 @@
+# SSU: Far Horizons organ categories used by surgery. connectsTo is replaced by upstream organ relationships.
+- type: organCategory
+  id: Cavity

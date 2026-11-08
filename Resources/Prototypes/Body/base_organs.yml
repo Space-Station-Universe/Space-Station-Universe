@@ -41,6 +41,7 @@
     tags:
     - Raw
     - Meat
+    - Organic # SSU: Far Horizons surgery, organic-only surgeries check this
 
 - type: entity
   parent:
@@ -75,6 +76,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageHead # SSU: Far Horizons limb damage
   id: OrganBaseHead
   name: head
   abstract: true
@@ -102,12 +104,14 @@
   - type: Tag
     tags:
     - Head
+    - Organic # SSU: Far Horizons surgery, this list replaces the inherited one so heads need it too
 
 - type: entity
   parent:
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageArmLeft # SSU: Far Horizons limb damage
   id: OrganBaseArmLeft
   name: left arm
   abstract: true
@@ -130,6 +134,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageArmRight # SSU: Far Horizons limb damage
   id: OrganBaseArmRight
   name: right arm
   abstract: true
@@ -151,6 +156,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageHandLeft # SSU: Far Horizons limb damage
   id: OrganBaseHandLeft
   name: left hand
   abstract: true
@@ -176,6 +182,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageHandRight # SSU: Far Horizons limb damage
   id: OrganBaseHandRight
   name: right hand
   abstract: true
@@ -202,6 +209,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageLegLeft # SSU: Far Horizons limb damage
   id: OrganBaseLegLeft
   name: left leg
   abstract: true
@@ -224,6 +232,7 @@
   - OrganBase
   - OrganBaseParent
   - OrganBaseChildExternal
+  - LimbDamageLegRight # SSU: Far Horizons limb damage
   id: OrganBaseLegRight
   name: right leg
   abstract: true
@@ -245,6 +254,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageFootLeft # SSU: Far Horizons limb damage
   id: OrganBaseFootLeft
   name: left foot
   abstract: true
@@ -266,6 +276,7 @@
   parent:
   - OrganBase
   - OrganBaseChildExternal
+  - LimbDamageFootRight # SSU: Far Horizons limb damage
   id: OrganBaseFootRight
   name: right foot
   abstract: true
@@ -302,6 +313,8 @@
   - type: Input
     context: "ghost"
   - type: Brain
+  - type: BrainExtra # SSU: Far Horizons brain transfer
+  - type: VitalOrgan # SSU: Far Horizons body extensions, removing the brain kills
   - type: InputMover
   - type: Examiner
   - type: BlockMovement
@@ -326,6 +339,7 @@
   name: eyes
   abstract: true
   components:
+  - type: VisionOrgan # SSU: Far Horizons body extensions, no eyes means blind
   - type: GibbableOrgan
   - type: Organ
     category: Eyes

@@ -111,6 +111,8 @@ public struct HitscanRaycastFiredEvent
     /// Data for the hitscan that was fired.
     /// </summary>
     public HitscanRaycastFiredData Data;
+
+    public bool DamageHandled; // SSU: Far Horizons limb damage, set once a system has dealt the damage
 }
 
 [ByRefEvent]

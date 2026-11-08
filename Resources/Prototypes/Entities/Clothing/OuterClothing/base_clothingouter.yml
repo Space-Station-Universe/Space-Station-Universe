@@ -166,6 +166,18 @@
   id: ClothingOuterHardsuitBase
   name: base hardsuit
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      ArmRight: {}
+      ArmLeft: {}
+      HandRight: {}
+      HandLeft: {}
+      LegRight: {}
+      LegLeft: {}
+      FootRight: {}
+      FootLeft: {}
+  # END SSU EDITS
   - type: PressureProtection
     highPressureMultiplier: 0.3
   - type: ClothingSpeedModifier

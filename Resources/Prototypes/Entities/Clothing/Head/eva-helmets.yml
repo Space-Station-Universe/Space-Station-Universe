@@ -78,6 +78,15 @@
   description: A void helmet made for paramedics.
   categories: [ HideSpawnMenu ]
   components:
+  # BEGIN SSU EDITS - Far Horizons limb armour
+  - type: LimbArmor
+    limbs:
+      Head:
+        coefficients:
+          Heat: 0.90
+          Radiation: 0.75
+          Caustic: 0.5
+  # END SSU EDITS
   - type: Sprite
     sprite: Clothing/Head/Hardsuits/paramedhelm.rsi
     layers:

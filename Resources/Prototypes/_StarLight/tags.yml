@@ -1,0 +1,11 @@
+- type: Tag
+  id: TheDark
+
+- type: Tag
+  id: BoneGel
+
+- type: Tag
+  id: CyberHandItem # SSU: Starlight surgery checks it, cyber hands not ported yet
+
+- type: Tag
+  id: SurgeryCompatibleArmor
