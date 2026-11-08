@@ -10,4 +10,6 @@ public sealed partial class OrganCategoryPrototype : IPrototype
 {
     [IdDataField]
     public string ID { get; private set; } = default!;
+
+    [DataField] public bool SurgeryTargetable; // SSU: Far Horizons surgery, parts that show up in the surgery menu
 }

@@ -1,0 +1,23 @@
+- type: reagent
+  id: BoneGel
+  group: Medicine
+  name: reagent-name-bonegel
+  desc: reagent-desc-bonegel
+  physicalDesc: reagent-physical-desc-opaque
+  flavor: medicine
+  color: "#dadada"
+  metabolisms:
+    Bloodstream:
+      effects:
+      # - !type:GenericStatusEffect # SSU: upstream status effects use ModifyStatusEffect
+      #   key: Drunk
+      #   time: 1.0
+      #   type: Remove
+      - !type:ModifyStatusEffect
+        effectProto: StatusEffectDrunk
+        time: 1.0
+        type: Remove
+      - !type:HealthChange
+        damage:
+          types:
+            Poison: 1.5 # You don't want to drink bonegel, because it's for bones and joints

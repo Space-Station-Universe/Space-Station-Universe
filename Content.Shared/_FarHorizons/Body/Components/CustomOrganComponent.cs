@@ -18,9 +18,8 @@ public sealed partial class VisionOrganComponent : Component
     public int MinDamage;
 }
 
-// SSU: surgery only, port with phase 3
-// [RegisterComponent, NetworkedComponent]
-// public sealed partial class CustomOrganComponent : Component;
+[RegisterComponent, NetworkedComponent]
+public sealed partial class CustomOrganComponent : Component;
 
 // SSU: unused in YAML/code, not ported
 // [RegisterComponent, NetworkedComponent]
@@ -29,13 +28,12 @@ public sealed partial class VisionOrganComponent : Component
 //     public string NameBackup = "";
 // }
 
-// SSU: brain transfer, port with phase 3
-// [RegisterComponent, NetworkedComponent]
-// public sealed partial class BrainExtraComponent : Component
-// {
-//     [DataField]
-//     public ComponentRegistry StoredComponents = new();
-// }
+[RegisterComponent, NetworkedComponent]
+public sealed partial class BrainExtraComponent : Component
+{
+    [DataField]
+    public ComponentRegistry StoredComponents = new();
+}
 
 [RegisterComponent, NetworkedComponent]
 public sealed partial class MovementOrganExpectedToMoveComponent : Component
@@ -113,8 +111,7 @@ public sealed partial class LegsMissingComponent : Component;
 // [ByRefEvent]
 // public readonly record struct OnDisconnectedVisualMarkingsOrganState;
 
-// SSU: brain transfer, port with phase 3
-// [ByRefEvent]
-// public readonly record struct BrainInserted(EntityUid Body);
-// [ByRefEvent]
-// public readonly record struct BrainRemoved(EntityUid Body);
+[ByRefEvent]
+public readonly record struct BrainInserted(EntityUid Body);
+[ByRefEvent]
+public readonly record struct BrainRemoved(EntityUid Body);

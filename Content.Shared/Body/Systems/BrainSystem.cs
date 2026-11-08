@@ -31,6 +31,19 @@ public sealed partial class BrainSystem : EntitySystem
         var ghostOnMove = EnsureComp<GhostOnMoveComponent>(newEntity);
         ghostOnMove.MustBeDead = HasComp<MobStateComponent>(newEntity); // Don't ghost living players out of their bodies.
 
+        // BEGIN SSU EDITS - Far Horizons brain transfer, the brain carries AI/faction/language components between bodies
+        if (HasComp<BrainComponent>(newEntity))
+        {
+            var ev = new Content.Shared._FarHorizons.Body.BrainRemoved(oldEntity);
+            RaiseLocalEvent(newEntity, ref ev);
+        }
+        else
+        {
+            var ev = new Content.Shared._FarHorizons.Body.BrainInserted(newEntity);
+            RaiseLocalEvent(oldEntity, ref ev);
+        }
+        // END SSU EDITS
+
         if (!_mindSystem.TryGetMind(oldEntity, out var mindId, out var mind))
             return;
 

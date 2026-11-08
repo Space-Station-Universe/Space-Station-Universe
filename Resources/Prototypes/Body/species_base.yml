@@ -137,6 +137,8 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+      enum.SurgeryUIKey.Key: # SSU: Far Horizons surgery
+        type: SurgeryBui
   - type: Puller
   - type: Speech
     speechSounds: Alto

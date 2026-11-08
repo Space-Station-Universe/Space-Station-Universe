@@ -14,6 +14,7 @@ public sealed partial class LimbReattachmentandRegrowthSystem : EntitySystem
     [Dependency] private SharedDoAfterSystem _doAfter = default!;
     [Dependency] private SharedContainerSystem _container = default!;
     [Dependency] private OrganRelationSystem _organRelation = default!; // SSU: upstream parent/child organs
+    [Dependency] private DetachableOrganSystem _detachable = default!; // SSU: surgery amputation
     public override void Initialize()
     {
         base.Initialize();
@@ -148,6 +149,71 @@ public sealed partial class LimbReattachmentandRegrowthSystem : EntitySystem
     public ProtoId<OrganCategoryPrototype>? CategoryOf(EntityUid organ)
     {
         return TryComp<OrganComponent>(organ, out var comp) ? comp.Category : null;
+    }
+
+    // SSU: A held detached body stands in for its root limb, so surgery tools see the arm and not the detached piece.
+    public EntityUid ToolFor(EntityUid held)
+    {
+        return GetRootLimb(held) ?? held;
+    }
+
+    // SSU: The detached body holding this organ, if it is not in a living body.
+    public EntityUid? DetachedBodyOf(EntityUid organ)
+    {
+        if (!TryComp<OrganComponent>(organ, out var comp) || comp.Body is not { } body || HasComp<InitialBodyComponent>(body))
+            return null;
+
+        return body;
+    }
+
+    // SSU: Puts an organ (and everything on it, if it came off as a detached piece) into the body and links it to its parent limb.
+    public bool AttachOrgan(EntityUid target, EntityUid organ)
+    {
+        if (!TryComp<BodyComponent>(target, out var body) || body.Organs == null || CategoryOf(organ) is not { } category)
+            return false;
+
+        if (body.Organs.ContainedEntities.Any(o => CategoryOf(o) == category))
+            return false;
+
+        var parent = FindParentOrgan(target, organ);
+        var detached = DetachedBodyOf(organ);
+
+        var toMove = new List<EntityUid> { organ };
+        if (detached != null && TryComp<BodyComponent>(detached, out var detachedBody) && detachedBody.Organs != null)
+            toMove = detachedBody.Organs.ContainedEntities.ToList();
+
+        if (!_container.CanInsert(organ, body.Organs))
+            return false;
+
+        foreach (var moving in toMove)
+            _container.Insert(moving, body.Organs);
+
+        if (parent != null && TryComp<ChildOrganComponent>(organ, out var child) && child.Parent == null)
+            _organRelation.Relate(parent.Value, organ);
+
+        if (detached != null && TryComp<BodyComponent>(detached, out var empty) && (empty.Organs == null || empty.Organs.Count == 0))
+            PredictedQueueDel(detached.Value);
+
+        return true;
+    }
+
+    // SSU: Takes an organ out of the body. Limbs come off with their children as a detached piece, internal organs are unlinked and dropped.
+    public bool ExtractOrgan(EntityUid organ)
+    {
+        if (!TryComp<OrganComponent>(organ, out var comp) || comp.Body is not { } target ||
+            !TryComp<BodyComponent>(target, out var body) || body.Organs == null)
+            return false;
+
+        if (HasComp<DetachableOrganComponent>(organ))
+            return _detachable.Detach(organ) != null;
+
+        if (!_container.CanRemove(organ, body.Organs))
+            return false;
+
+        if (HasComp<ChildOrganComponent>(organ))
+            _organRelation.Orphan(organ);
+
+        return _container.Remove(organ, body.Organs);
     }
     // END SSU EDITS
 }

@@ -157,6 +157,7 @@
     tags:
     - PetWearable
     - WhitelistChameleon
+    - SurgeryCompatibleArmor # SSU: Starlight surgery, can operate with this mask on
   - type: PhysicalComposition
     materialComposition:
       Steel: 50
@@ -205,6 +206,7 @@
     tags:
     - PetWearable
     - WhitelistChameleon
+    - SurgeryCompatibleArmor # SSU: Starlight surgery, can operate with this mask on
   - type: PhysicalComposition
     materialComposition:
       Steel: 50
@@ -344,6 +346,11 @@
       Plastic: 25
   - type: StaticPrice
     price: 5
+  # BEGIN SSU EDITS - Starlight surgery, can operate with this mask on
+  - type: Tag
+    tags:
+    - SurgeryCompatibleArmor
+  # END SSU EDITS
 
 - type: entity
   parent: ClothingMaskBase

@@ -19,6 +19,13 @@
   name: hydraulic clamp
   description: Gives the mech the ability to grab things and drag them around.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Retractor
+    speed: 2.3 #FarHorizons
+    startSound:
+      path: /Audio/Mecha/sound_mecha_hydraulic.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
     state: mecha_clamp
   - type: Item
@@ -44,6 +51,13 @@
   name: small hydraulic clamp
   description: Gives the mech the ability to grab things and drag them around.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Retractor
+    speed: 2.3 
+    startSound:
+      path: /Audio/Mecha/sound_mecha_hydraulic.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
     state: mecha_clamp_small
   - type: Item

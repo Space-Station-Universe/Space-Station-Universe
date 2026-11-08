@@ -3,6 +3,15 @@
   id: BaseKnife
   abstract: true
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: Scalpel
+    speed: 1.7 
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Tag
     tags:
     - Knife
@@ -261,6 +270,15 @@
   id: Shiv
   description: A crude weapon fashioned from a piece of cloth and a glass shard.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Scalpel
+    speed: 2.1 
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/scalpel2.ogg
+  # END SSU EDITS
   - type: Tag
     tags:
     - CombatKnife

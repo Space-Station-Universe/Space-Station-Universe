@@ -182,7 +182,7 @@ public sealed partial class HealingSystem : EntitySystem
     }
     // END SSU EDITS
 
-    private bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target, EntityUid? origin = null) // SSU: origin for limb damage
+    public bool HasDamage(Entity<HealingComponent> healing, Entity<DamageableComponent> target, EntityUid? origin = null) // SSU: origin for limb damage, public for surgery tend steps
     {
         // BEGIN SSU EDITS - Far Horizons limb damage, damage on any limb counts too
         if (_limbDamage.GetDamagedLimb(target.Owner, healing.Comp) != null)

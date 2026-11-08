@@ -3,6 +3,15 @@
   parent: [SolutionWelder, BaseItem]
   id: BaseWelder
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  - type: Cautery
+    speed: 1.6 
+    startSound:
+      path: /Audio/_Starlight/Medical/Surgery/cautery1.ogg
+    endSound:
+      path: /Audio/_Starlight/Medical/Surgery/cautery2.ogg
+  # END SSU EDITS
   - type: Sprite
     layers:
     - state: icon
@@ -197,6 +206,9 @@
   id: WelderMini
   description: "A miniature welder used during emergencies."
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryTool
+  # END SSU EDITS
   - type: Sprite
     sprite: Objects/Tools/welder_mini.rsi
   - type: Item

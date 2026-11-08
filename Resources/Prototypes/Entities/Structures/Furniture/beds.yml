@@ -46,6 +46,10 @@
   name: bed
   description: This is used to lie in, sleep in or strap on. Resting here provides extremely slow healing.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: SurgeryBedSpeed
+    bedSpeedModifier: 1.6
+  # END SSU EDITS
   - type: Destructible
     thresholds:
     - trigger: &DamageFurnitureNormal
@@ -67,6 +71,11 @@
   name: medical bed
   description: A hospital bed for patients to recover in. Resting here provides fairly slow healing.
   components:
+  # BEGIN SSU EDITS - Far Horizons/Starlight surgery tools
+  - type: OperatingTable
+  - type: SurgeryBedSpeed
+    bedSpeedModifier: 1.4
+  # END SSU EDITS
   - type: Sprite
     state: bed-MED
   - type: HealOnBuckle
