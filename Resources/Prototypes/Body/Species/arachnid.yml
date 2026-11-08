@@ -74,7 +74,8 @@
   id: MobArachnid
   name: Urist McWebs
   components:
-  # BEGIN SSU EDITS - Far Horizons limb damage
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
   - type: LimbDamageable
     proto: LimbTargetArachnid
   # END SSU EDITS

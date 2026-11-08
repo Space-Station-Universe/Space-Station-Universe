@@ -94,6 +94,7 @@
   id: MobHuman
   name: Urist McHands
   components:
+  - type: VisionOrganRequiredForVision # Far Horizons body extensions
   - type: Butcherable
     spawned:
     - id: FoodMeatHuman

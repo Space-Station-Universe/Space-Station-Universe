@@ -140,7 +140,8 @@
   id: MobMoth
   name: Urist McFluff
   components:
-  # BEGIN SSU EDITS - Far Horizons limb damage
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
   - type: LimbDamageable
     proto: LimbTargetMoth
   # END SSU EDITS

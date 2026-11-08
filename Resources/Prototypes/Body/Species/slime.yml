@@ -82,6 +82,7 @@
   id: MobSlimePerson
   name: Urist McWobble
   components:
+  - type: ReattacheableLimbs #   # SSU: Far Horizons body extensions / limb damage
   - type: Storage
     clickInsert: false
     grid:
@@ -179,6 +180,10 @@
   id: OrganSlimePerson
   abstract: true
   suffix: slime person
+  # BEGIN SSU EDITS - Far Horizons body extensions
+  components:
+  - type: ReattacheableLimb
+  # END SSU EDITS
 
 - type: entity
   id: OrganSlimePersonMetabolizer

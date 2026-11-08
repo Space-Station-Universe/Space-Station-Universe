@@ -72,7 +72,9 @@
   id: MobDiona
   name: Urist McPlants
   components:
-  # BEGIN SSU EDITS - Far Horizons limb damage
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
+  - type: RegrowableLimbs
   - type: LimbDamageable
     proto: LimbTargetDiona
   # END SSU EDITS

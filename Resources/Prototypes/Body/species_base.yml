@@ -177,6 +177,13 @@
   # BEGIN SSU EDITS - Far Horizons limb damage
   - type: LimbDamageable
     proto: LimbTargetHuman
+  - type: NeedsOrgansForInventorySlots # Far Horizons body extensions
+    slots:
+      - head
+      - ears
+      - mask
+      - gloves
+      - shoes
   # END SSU EDITS
   - type: Satiation
     satiations:

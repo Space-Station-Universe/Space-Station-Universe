@@ -89,6 +89,7 @@
         type: HumanoidMarkingModifierBoundUserInterface
       enum.StrippingUiKey.Key:
         type: StrippableBoundUserInterface
+  - type: MovementOrganExpectedToMove # SSU: Far Horizons body extensions
   - type: InitialBody
     relationships:
       Torso: [Head, ArmLeft, ArmRight, LegLeft, LegRight, Appendix, Lungs, Heart, Stomach, Liver, Kidneys]

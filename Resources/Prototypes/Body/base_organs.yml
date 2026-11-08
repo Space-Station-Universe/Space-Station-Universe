@@ -311,6 +311,7 @@
   - type: Input
     context: "ghost"
   - type: Brain
+  - type: VitalOrgan # SSU: Far Horizons body extensions, removing the brain kills
   - type: InputMover
   - type: Examiner
   - type: BlockMovement
@@ -335,6 +336,7 @@
   name: eyes
   abstract: true
   components:
+  - type: VisionOrgan # SSU: Far Horizons body extensions, no eyes means blind
   - type: GibbableOrgan
   - type: Organ
     category: Eyes

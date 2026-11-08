@@ -42,6 +42,11 @@
   id: LimbDamageHeadNonVital
   abstract: true
   components:
+  - type: OrganWithInventorySlots
+    slots:
+      - head
+      - mask
+      - ears
   - type: DamageableLimb
     bodyDamageFactor: 0.4 # Non vital variant is used for diona and slime, same 40% as legs/arms
     missChance: 0 # Still 0
@@ -71,7 +76,7 @@
   id: LimbDamageHead
   abstract: true
   components:
-  # - type: VitalOrgan # SSU: body extensions, later port
+  - type: VitalOrgan
   - type: DamageableLimb
     bodyDamageFactor: 1.0 # 100% damage transfer for vital heads
     missChance: 0
@@ -152,8 +157,8 @@
   id: LimbDamageHandLeft
   abstract: true
   components:
-  # - type: OrganWithInventorySlots # SSU: body extensions, later port
-  #   slots: [ gloves ]
+  - type: OrganWithInventorySlots
+    slots: [ gloves ]
   - type: DamageableLimb
     bodyDamageFactor: 0.2
     missChance: 0
@@ -191,8 +196,8 @@
   id: LimbDamageHandRight
   abstract: true
   components:
-  # - type: OrganWithInventorySlots # SSU: body extensions, later port
-  #   slots: [ gloves ]
+  - type: OrganWithInventorySlots
+    slots: [ gloves ]
   - type: DamageableLimb
     bodyDamageFactor: 0.2
     missChance: 0
@@ -232,7 +237,7 @@
   id: LimbDamageLegLeft
   abstract: true
   components:
-  # - type: MovementOrgan # SSU: body extensions, later port
+  - type: MovementOrgan
   - type: LimbDamageVisuals
     layer: "enum.HumanoidVisualLayers.LLeg"
   - type: LimbDamageEffect
@@ -265,7 +270,7 @@
   id: LimbDamageLegRight
   abstract: true
   components:
-  # - type: MovementOrgan # SSU: body extensions, later port
+  - type: MovementOrgan
   - type: LimbDamageVisuals
     layer: "enum.HumanoidVisualLayers.RLeg"
   - type: LimbDamageEffect
@@ -300,8 +305,8 @@
   id: LimbDamageFootLeft
   abstract: true
   components:
-  # - type: OrganWithInventorySlots # SSU: body extensions, later port
-  #   slots: [ shoes ]
+  - type: OrganWithInventorySlots
+    slots: [ shoes ]
   - type: DamageableLimb
     bodyDamageFactor: 0.2
     missChance: 0
@@ -339,8 +344,8 @@
   id: LimbDamageFootRight
   abstract: true
   components:
-  # - type: OrganWithInventorySlots # SSU: body extensions, later port
-  #   slots: [ shoes ]
+  - type: OrganWithInventorySlots
+    slots: [ shoes ]
   - type: DamageableLimb
     bodyDamageFactor: 0.2
     missChance: 0

@@ -163,7 +163,8 @@
   id: MobVox
   name: Urist McVox
   components:
-  # BEGIN SSU EDITS - Far Horizons limb damage
+  # BEGIN SSU EDITS - Far Horizons body extensions / limb damage
+  - type: VisionOrganRequiredForVision
   - type: LimbDamageable
     proto: LimbTargetVox
   # END SSU EDITS
